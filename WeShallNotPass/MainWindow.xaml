@@ -7,6 +7,7 @@
         mc:Ignorable="d"
         Title="Vidámpark" Height="450" Width="800">
     <Grid>
+        <Image HorizontalAlignment="Left" Height="362" Margin="78,0,0,0" VerticalAlignment="Center" Width="740" Source="/4k_fellowship_movie_screencaps.com_23524.0.jpg"/>
 
     </Grid>
 </Window>
