@@ -9,6 +9,8 @@ namespace WeShallNotPass.Model
 {
     public class Model
     {
+        #region Properties
+
         private Item[,] _gameArea;
         public Item[,] GameArea
         {
@@ -31,7 +33,6 @@ namespace WeShallNotPass.Model
             set { _games = value; }
         }
 
-        //public List<Restaurant> Restaurants { get; set; }
         private List<Restaurant> _restaurants;
         public List<Restaurant> Restaurants
         {
@@ -39,17 +40,14 @@ namespace WeShallNotPass.Model
             set { _restaurants = value; }
         }
 
-
-        //public List<Restroom> Restrooms { get; set; }
         private List<Restroom> _restrooms;
         public List<Restroom> Restroom
         {
             get { return _restrooms; }
             set { _restrooms = value; }
         }
-        //public List<Visitor> Visitors { get; set; }
-        private List<Visitor> _visitors;   
 
+        private List<Visitor> _visitors;   
         public List<Visitor> Visitors
         {
             get { return _visitors; }
@@ -57,7 +55,6 @@ namespace WeShallNotPass.Model
         }
 
         private int _money;
-
         public int Money
         {
             get { return _money; }
@@ -87,11 +84,58 @@ namespace WeShallNotPass.Model
             set { _time = value; }
         }
 
+        #endregion
+
+        #region Fields
+
         private DispatcherTimer _timer;
+        #endregion
 
+        #region Events 
 
+        public event EventHandler<EventArgs> ItemUpdated;
+        public event EventHandler<EventArgs> VisitorsUpdated;
+        public event EventHandler<EventArgs> CampaignUpdated;
+        public event EventHandler<EventArgs> TimePassed;
+        public event EventHandler<EventArgs> MoneyUpdated;
 
+        #endregion
 
+        #region Methods
 
+        public void NewGame()
+        {
+            throw new NotImplementedException();
+        }
+        public void OpenPark()
+        {
+            throw new NotImplementedException();
+        }
+
+        public void ClosePark()
+        {
+            throw new NotImplementedException();
+        }
+
+        public void Build(Item item)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void Demolish(Item item)
+        {
+            throw new NotImplementedException();
+        }
+
+        private bool CanBuildAt(int x, int y, int sizeX, int sizeY)
+        {
+            throw new NotImplementedException();
+        }
+
+        private void registerVisitor()
+        {
+            throw new NotImplementedException();
+        }
+        #endregion
     }
 }
