@@ -16,7 +16,11 @@
         </Menu>
         <DockPanel>
             <DockPanel DockPanel.Dock="Left">
-                <Canvas DockPanel.Dock="Top" Height="896" Width="896" Background="#FF66B866"></Canvas>
+                <Canvas DockPanel.Dock="Top" Height="896" Width="896">
+                    <Canvas.Background>
+                        <ImageBrush ImageSource="{Binding Background}"></ImageBrush>
+                    </Canvas.Background>
+                </Canvas>
                 <StatusBar>
                     <StatusBarItem HorizontalAlignment="Center">
                         <StackPanel Orientation="Horizontal">
