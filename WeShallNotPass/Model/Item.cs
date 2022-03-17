@@ -83,7 +83,7 @@ namespace WeShallNotPass.Model
         }
     }
 
-    public partial class Visitor { }
+    //public partial class Visitor { }
 
     public class Facility : Item
     {
@@ -98,7 +98,7 @@ namespace WeShallNotPass.Model
             RegularFee = fee;
             Duration = duration;
             HasPower = CheckPower(gamearea);
-            IsReachable = CheckReachibility(gamearea);
+            IsReachable = CheckRechaibility(gamearea);
         }
         public bool CheckPower(Item[,] ga)
         {
@@ -120,7 +120,7 @@ namespace WeShallNotPass.Model
             
             return false;
         }
-        bool CheckReachibility(Item[,] ga)
+        bool CheckRechaibility(Item[,] ga)
         {
             Item entrance = null;
             //look for entrance to reference position, can be changed to receive as parameter
