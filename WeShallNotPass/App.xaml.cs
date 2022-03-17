@@ -14,8 +14,9 @@ namespace WeShallNotPass
     /// </summary>
     public partial class App : Application
     {
-        private MainWindow view;
-        private MainViewModel viewModel;
+        private Model.Model _model;
+        private MainWindow _view;
+        private MainViewModel _viewModel;
 
         public App()
         {
@@ -24,11 +25,14 @@ namespace WeShallNotPass
 
         private void App_Startup(object sender, StartupEventArgs e)
         {
-            viewModel = new MainViewModel();
+            _model = new Model.Model();
+            _model.GameAreaSize = 14;
+
+            _viewModel = new MainViewModel(_model);
             
-            view = new MainWindow();
-            view.DataContext = viewModel;
-            view.Show();
+            _view = new MainWindow();
+            _view.DataContext = _viewModel;
+            _view.Show();
         }
     }
 }

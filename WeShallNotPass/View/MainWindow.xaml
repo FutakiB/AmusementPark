@@ -16,11 +16,37 @@
         </Menu>
         <DockPanel>
             <DockPanel DockPanel.Dock="Left">
-                <Canvas DockPanel.Dock="Top" Height="896" Width="896">
-                    <Canvas.Background>
-                        <ImageBrush ImageSource="{Binding Background}"></ImageBrush>
-                    </Canvas.Background>
-                </Canvas>
+
+                <ItemsControl DockPanel.Dock="Top" ItemsSource="{Binding Items}">
+                    <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <Canvas Height="896" Width="896">
+                                <Canvas.Background>
+                                    <ImageBrush ImageSource="{Binding Background}"></ImageBrush>
+                                </Canvas.Background>
+                            </Canvas>
+                        </ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
+
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <Image 
+                                Source="{Binding Image}"
+                                Width="{Binding SizeX}"
+                                Height="{Binding SizeY}"
+                                Stretch="UniformToFill"></Image>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+
+                    <ItemsControl.ItemContainerStyle>
+                        <Style>
+                            <Setter Property="Canvas.Left" Value="{Binding X}"></Setter>
+                            <Setter Property="Canvas.Top" Value="{Binding Y}"></Setter>
+                            <Setter Property="Canvas.ZIndex" Value="{Binding Z}"></Setter>
+                        </Style>
+                    </ItemsControl.ItemContainerStyle>
+                </ItemsControl>
+
                 <StatusBar>
                     <StatusBarItem HorizontalAlignment="Center">
                         <StackPanel Orientation="Horizontal">
