@@ -12,6 +12,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using WeShallNotPass.ViewModel;
 
 namespace WeShallNotPass
 {
@@ -23,6 +24,16 @@ namespace WeShallNotPass
         public MainWindow()
         {
             InitializeComponent();
+        }
+
+        private void ListBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            ListBox shopitems = sender as ListBox;
+            ShopItemViewModel item = shopitems.SelectedItem as ShopItemViewModel;
+            if (item == null) return;
+            MainViewModel vm = DataContext as MainViewModel;
+            vm.SelectedItem = item.obj;
+
         }
     }
 }

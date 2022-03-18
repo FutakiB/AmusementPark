@@ -46,7 +46,7 @@ namespace WeShallNotPass.Model
     {
         public int Radius;
         public int MoodBoost;
-        Plant(int x, int y, String name, int sx, int sy, String imageLocation, int price, int buildTime,
+        public Plant(int x, int y, String name, int sx, int sy, String imageLocation, int price, int buildTime,
             int radius, int mood) : base(x, y, name, sx, sy, imageLocation, price, buildTime)
         {
             Radius = radius;
@@ -56,7 +56,7 @@ namespace WeShallNotPass.Model
 
     public class Road : Item
     {
-        Road(int x, int y, String name, int sx, int sy, String imageLocation, int price, int buildTime)
+        public Road(int x, int y, String name, int sx, int sy, String imageLocation, int price, int buildTime)
             : base(x, y, name, sx, sy, imageLocation, price, buildTime)
         {
             
@@ -102,6 +102,7 @@ namespace WeShallNotPass.Model
         }
         public bool CheckPower(Item[,] ga)
         {
+            if (ga == null) return false;
             foreach (Item i in ga)
             {
                 if (i is Generator)
@@ -122,6 +123,7 @@ namespace WeShallNotPass.Model
         }
         bool CheckRechaibility(Item[,] ga)
         {
+            if (ga == null) return false;
             Item entrance = null;
             //look for entrance to reference position, can be changed to receive as parameter
             //use Item::IsBuilt as a "found" variable for BFS

@@ -7,7 +7,7 @@ using System.Windows.Input;
 
 namespace WeShallNotPass.ViewModel
 {
-    class DelegateCommand : ICommand
+    public class DelegateCommand : ICommand
     {
         private Func<object, bool> canExecute;
         private Action<object> execute;

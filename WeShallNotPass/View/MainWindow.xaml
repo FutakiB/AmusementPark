@@ -4,7 +4,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:WeShallNotPass"
-        xmlns:gif="http://wpfanimatedgif.codeplex.com"
+        xmlns:gif="http://wpfanimatedgif.codeplex.com" xmlns:viewmodel="clr-namespace:WeShallNotPass.ViewModel" d:DataContext="{d:DesignInstance Type=viewmodel:MainViewModel}"
         mc:Ignorable="d"
         Title="Vidámpark" Height="950" Width="1300" ResizeMode="NoResize" SizeToContent="Height">
     <DockPanel>
@@ -65,18 +65,58 @@
                     <RowDefinition Height="1*"></RowDefinition>
                 </Grid.RowDefinitions>
 
-                <ScrollViewer Grid.Row="0" VerticalScrollBarVisibility="Visible" Background="#FFC4C4F5">
-                    <StackPanel VerticalAlignment="Top" HorizontalAlignment="Left">
-                        <DockPanel Margin="12">
-                            <Image DockPanel.Dock="Left" Width="128" Height="128"></Image>
-                            <StackPanel Orientation="Vertical" VerticalAlignment="Center" Margin="10,0,0,0">
-                                <TextBlock Text="Name" FontSize="18" FontWeight="Bold"></TextBlock>
-                                <TextBlock Text="Price" FontSize="16" Foreground="#FF252525"></TextBlock>
-                                <TextBlock Text="ServiceCost" FontSize="16" Foreground="#FF252525"></TextBlock>
+                <ItemsControl ItemsSource="{Binding ShopItems}" Grid.Row="0" ScrollViewer.CanContentScroll= "True" ScrollViewer.VerticalScrollBarVisibility="Visible" Background="#604fa1">
+                    <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <StackPanel Orientation="Vertical"></StackPanel>
+                        </ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <StackPanel Margin="4 4 4 4">
+                                <Button BorderBrush="Transparent" Command="{Binding SelectCommand}" CommandParameter="{Binding}">
+                                    <Button.Style>
+                                        <Style TargetType="Button">
+                                            <Style.Triggers>
+                                                <DataTrigger Binding="{Binding IsSelected}" Value="true">
+                                                    <Setter Property="Background" Value="#83cffb"></Setter>
+                                                </DataTrigger>
+                                                <DataTrigger Binding="{Binding IsSelected}" Value="false">
+                                                    <Setter Property="Background" Value="Transparent"></Setter>
+                                                </DataTrigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </Button.Style>
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition SharedSizeGroup="Kép"></ColumnDefinition>
+                                            <ColumnDefinition SharedSizeGroup="Szöveg"></ColumnDefinition>
+                                        </Grid.ColumnDefinitions>
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="Auto"/>
+                                            <RowDefinition Height="Auto"/>
+                                            <RowDefinition Height="Auto"/>
+                                            <RowDefinition Height="Auto"/>
+                                            <RowDefinition Height="Auto"/>
+                                        </Grid.RowDefinitions>
+                                        <Image Source="{Binding Image}" HorizontalAlignment="Left" VerticalAlignment="Top" MaxWidth="96" MaxHeight="96" Grid.Column="0" Grid.Row="0" Margin="0 0 10 0" Grid.RowSpan="5">
+                                        </Image>
+                                        <TextBlock FontSize="20" FontWeight="Bold" Text="{Binding Name}" Grid.Column="1" Grid.Row="0"></TextBlock>
+                                        <TextBlock FontSize="16" Grid.Column="1" Grid.Row="1">
+                                                    <Run Text="Méret: "></Run>
+                                                    <Run Text="{Binding SizeX}"></Run>
+                                                    <Run Text=", "></Run>
+                                                    <Run Text="{Binding SizeY}"></Run>
+                                        </TextBlock>
+                                        <TextBlock FontSize="16" Text="{Binding Price, StringFormat='Ár: {0}'}" Grid.Column="1" Grid.Row="2"></TextBlock>
+                                        <TextBlock FontSize="16" Text="{Binding BuildTime, StringFormat='Építési idő: {0}'}" Grid.Column="1" Grid.Row="3"></TextBlock>
+                                        <TextBlock FontSize="16" Text="{Binding RegularFee, StringFormat='Fenntartási költség: {0}'}" Grid.Column="1" Grid.Row="4"></TextBlock>
+                                    </Grid>
+                                </Button>
                             </StackPanel>
-                        </DockPanel>
-                    </StackPanel>
-                </ScrollViewer>
+                        </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
                 <GridSplitter Grid.Row="1" VerticalAlignment="Center" HorizontalAlignment="Stretch"></GridSplitter>
                 <ScrollViewer Grid.Row="2" VerticalScrollBarVisibility="Visible" Background="#FFBDE4F0">
                     <StackPanel VerticalAlignment="Top" HorizontalAlignment="Left">
