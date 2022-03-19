@@ -103,9 +103,43 @@ namespace WeShallNotPass.Model
 
         #region Methods
 
+        public Model()
+        {
+            _timer = new DispatcherTimer();
+            _timer.Interval = new TimeSpan(0, 0, 0, 0, 100);
+            _timer.Tick += _timer_Tick;
+
+            /*_gameAreaSize = 16;
+            _gameArea = new Item[GameAreaSize,GameAreaSize];
+            _games = new List<Game>();
+            _restaurants = new List<Restaurant>();
+            _restrooms = new List<Restroom>();
+            _money = 10000;
+            _isCampaigning = false;
+            _time = 0;*/
+            NewGame();
+
+        }
+
+        private void _timer_Tick(object sender, EventArgs e)
+        {
+            Time += 1;
+        }
+
         public void NewGame()
         {
-            throw new NotImplementedException();
+            _gameAreaSize = 16;
+            _gameArea = new Item[GameAreaSize, GameAreaSize];
+            _games = new List<Game>();
+            _restaurants = new List<Restaurant>();
+            _restrooms = new List<Restroom>();
+            _money = 10000;
+            _isCampaigning = false;
+            _time = 0;
+
+            _timer.Start();
+
+
         }
         public void OpenPark()
         {
