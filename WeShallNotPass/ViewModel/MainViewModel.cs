@@ -46,9 +46,24 @@ namespace WeShallNotPass.ViewModel
             ShopItems.Clear();
             ShopItems.Add(new ShopItemViewModel("Hullámvasút", // menu name
                 new Uri("/Images/placeholder.png", UriKind.Relative), // picture location
-                2, 2, 2600, 50, 100, // sizeX, sizeY, cost, build time, daily fees
+                2, 2, 2600, 50, // sizeX, sizeY, cost, build time
                 new Game(-1,-1,"Hullámvasút",2,2, "/Images/placeholder.png",2600,50,26,50,30, null, 10, 100,400,30), // type, posX, posY, name, sizeX, sizeY, picture location, price, build time, specifics
                 new DelegateCommand(t => ManageSelection(t as ShopItemViewModel)))); // select action
+            ShopItems.Add(new ShopItemViewModel("Pálmafa", // menu name
+                new Uri("/Images/placeholder.png", UriKind.Relative), // picture location
+                1, 1, 300, 0, // sizeX, sizeY, cost, build time
+                new Plant(-1,-1,"Pálmafa",1,1,"", 300,0,5,20), // type, posX, posY, name, sizeX, sizeY, picture location, price, build time, specifics
+                new DelegateCommand(t => ManageSelection(t as ShopItemViewModel))));
+            ShopItems.Add(new ShopItemViewModel("Generátor",
+                new Uri("/Images/placeholder.png", UriKind.Relative),
+                1,1,500,30,
+                new Generator(-1,-1,"Generátor",1,1,"",500,30,4),
+                new DelegateCommand(t => ManageSelection(t as ShopItemViewModel))));
+            ShopItems.Add(new ShopItemViewModel("Étterem",
+                new Uri("/Images/placeholder.png", UriKind.Relative),
+                1, 2, 1900, 40,
+                new Restaurant(-1,-1,"Étterem",1,2,"", 1900,40,20,400,10,null,20,10,50),
+                new DelegateCommand(t => ManageSelection(t as ShopItemViewModel))));
         }
 
         private void ManageSelection(ShopItemViewModel t)

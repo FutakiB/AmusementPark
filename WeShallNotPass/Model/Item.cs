@@ -40,6 +40,10 @@ namespace WeShallNotPass.Model
         public String Image;
         public int Price, BuildTime;
         public bool IsBuilt;
+
+        public virtual string UniqueShopString() {
+            return "";
+        }
     }
 
     public class Plant : Item
@@ -51,6 +55,10 @@ namespace WeShallNotPass.Model
         {
             Radius = radius;
             MoodBoost = mood;
+        }
+
+        public override string UniqueShopString() {
+            return "Hangulatnövelés: " + MoodBoost + "\nHatáskörnyezet: " + Radius;
         }
     }
 
@@ -71,6 +79,11 @@ namespace WeShallNotPass.Model
         {
             Radius = rad;
         }
+
+        public override string UniqueShopString()
+        {
+            return "Hatáskörnyezet: " + Radius;
+        }
     }
     
     public class MainEntrance : Generator
@@ -81,6 +94,11 @@ namespace WeShallNotPass.Model
         {
             TicketPrice = tp;
         }
+
+        public override string UniqueShopString()
+        {
+            return "Belépő ár: " + TicketPrice;
+        }
     }
 
     //public partial class Visitor { }
@@ -90,6 +108,11 @@ namespace WeShallNotPass.Model
         public List<Visitor> Queue;
         public int MaxCapacity, RegularFee, Duration;
         public bool HasPower, IsReachable;
+
+        public override string UniqueShopString()
+        {
+            return "Kapacitás: " + MaxCapacity + "\nNapi költség: " + RegularFee + "\nHasználati idő: " + Duration;
+        }
         public Facility(int x, int y, String name, int sx, int sy, String imageLocation, int price, int buildTime,
             int capacity, int fee, int duration, Item[,] gamearea) : base(x, y, name, sx, sy, imageLocation, price, buildTime)
         {
@@ -180,6 +203,10 @@ namespace WeShallNotPass.Model
 
     public class Restroom : Facility
     {
+        public override string UniqueShopString()
+        {
+            return "Kapacitás: " + MaxCapacity + "\nNapi költség: " + RegularFee + "\nHasználati idő: " + Duration;
+        }
         public Restroom(int x, int y, String name, int sx, int sy, String imageLocation, int price, int buildTime,
             int capacity, int fee, int duration, Item[,] gamearea) : base(x, y, name, sx, sy, imageLocation, price, buildTime, capacity, fee, duration, gamearea) { }
     }
@@ -188,6 +215,11 @@ namespace WeShallNotPass.Model
     {
         public int MinCapacity, TicketPrice, OperationCost, MoodBoost;
         public bool isOperating;
+        public override string UniqueShopString()
+        {
+            return "Kapacitás: " + MaxCapacity + "\nNapi költség: " + RegularFee + "\nHasználati idő: " + Duration
+                + "\nSzükséges kapacitás: " + MinCapacity + "\nJegyár: " + TicketPrice + "\nHasználati költség: " + OperationCost + "\nHangulatnövelés: " + MoodBoost;
+        }
         public Game(int x, int y, String name, int sx, int sy, String imageLocation, int price, int buildTime,
             int capacity, int fee, int duration, Item[,] gamearea,
             int mincap, int ticketprice, int cost, int mood) : base(x, y, name, sx, sy, imageLocation, price, buildTime, capacity, fee, duration, gamearea)
@@ -203,6 +235,11 @@ namespace WeShallNotPass.Model
     public class Restaurant : Facility
     {
         int FoodPrice, IngredientCost, HungerBoost;
+        public override string UniqueShopString()
+        {
+            return "Kapacitás: " + MaxCapacity + "\nNapi költség: " + RegularFee + "\nHasználati idő: " + Duration
+                + "\nBeszerzési ár:" + IngredientCost + "\nÉhségnövelés: " + HungerBoost;
+        }
         public Restaurant(int x, int y, String name, int sx, int sy, String imageLocation, int price, int buildTime,
             int capacity, int fee, int duration, Item[,] gamearea,
             int foodp, int ingrcost, int boost) : base(x, y, name, sx, sy, imageLocation, price, buildTime, capacity, fee, duration, gamearea)

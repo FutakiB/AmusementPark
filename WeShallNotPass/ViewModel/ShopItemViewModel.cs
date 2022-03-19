@@ -15,12 +15,19 @@ namespace WeShallNotPass.ViewModel
         public int SizeY { get; set; }
         public int Price { get; set; }
         public int  BuildTime { get; set; }
-        public int RegularFee { get; set; }
         public bool IsSelected { get; set; }
+        public String UniqueShopText
+        {
+            get
+            {
+                if (obj == null) return "";
+                return obj.UniqueShopString();
+            }
+        }
         public Item obj;
         public DelegateCommand SelectCommand { get; set; }
 
-        public ShopItemViewModel(String name, Uri image, int sx, int sy, int price, int bt, int fee, Item o, DelegateCommand c)
+        public ShopItemViewModel(String name, Uri image, int sx, int sy, int price, int bt, Item o, DelegateCommand c)
         {
             Name = name;
             Image = image;
@@ -28,7 +35,6 @@ namespace WeShallNotPass.ViewModel
             SizeY = sy;
             Price = price;
             BuildTime = bt;
-            RegularFee = fee;
             IsSelected = false;
             obj = o;
             SelectCommand = c;
