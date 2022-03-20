@@ -10,9 +10,20 @@ namespace WeShallNotPass.ViewModel
 {
     class MainViewModel : ViewModelBase
     {
+        #region Fields
         private Model.Model _model;
         private Item selectedShopItem;
         private int lastSelectedIndex;
+        #endregion
+
+        #region Commands
+        public DelegateCommand NewGameCommand { get; private set; }
+        public DelegateCommand ExitCommand { get; private set; }
+        public DelegateCommand OpenParkCommand { get; private set; }
+        public DelegateCommand CloseParkCommand { get; private set; }
+        #endregion
+
+        #region Properties
         public Item SelectedItem { 
             get {
                 if (lastSelectedIndex == -1) throw new Exception("No shop item was selected.");
@@ -24,13 +35,39 @@ namespace WeShallNotPass.ViewModel
             }
         }
 
+
         public Uri Background { get; set; }
 
         public ObservableCollection<ItemViewModel> Items { get; private set; }
         public ObservableCollection<ShopItemViewModel> ShopItems { get; private set; }
+
+
+        public int Time
+        {
+            get { return _model.Time ; }
+            private set {  }
+        }
+
+        public int Money
+        {
+            get { return _model.Money; }
+            private set { }
+        }
+
+
+
+
+        #endregion
+
+        #region Constructor
         public MainViewModel(Model.Model model)
         {
             _model = model;
+            _model.TimePassed += new EventHandler<EventArgs>(timePassed);
+            _model.MoneyUpdated += new EventHandler<EventArgs>(moneyUpdated);
+            _model.ItemUpdated += new EventHandler<EventArgs>(itemUpdated);
+            _model.VisitorsUpdated += new EventHandler<EventArgs>(visitorsUpdated);
+
             selectedShopItem = null;
             lastSelectedIndex = -1;
 
@@ -39,6 +76,29 @@ namespace WeShallNotPass.ViewModel
             ShopItems = new ObservableCollection<ShopItemViewModel>();
 
             InitShopItems();
+        }
+        #endregion
+
+        #region Methods
+        private void visitorsUpdated(object sender, EventArgs e)
+        {
+            throw new NotImplementedException();
+        }
+
+        private void itemUpdated(object sender, EventArgs e)
+        {
+            throw new NotImplementedException();
+        }
+
+        private void moneyUpdated(object sender, EventArgs e)
+        {
+            OnPropertyChanged("Money");
+        }
+
+
+        public void timePassed(object sender, EventArgs e)
+        {
+            OnPropertyChanged("Time");
         }
 
         public void InitShopItems()
@@ -82,5 +142,7 @@ namespace WeShallNotPass.ViewModel
             selectedShopItem = ShopItems.ElementAt(index).obj;
             ShopItems.ElementAt(index).IsSelected = true;
         }
+
+        #endregion
     }
 }

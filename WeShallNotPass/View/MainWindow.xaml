@@ -10,10 +10,10 @@
     <DockPanel>
         <Menu DockPanel.Dock="Top">
             <MenuItem Header="Játék">
-                <MenuItem Header="Új"></MenuItem>
-                <MenuItem Header="Kilépés"></MenuItem>
+                <MenuItem Header="Új" Command="{Binding NewGameCommand}"></MenuItem>
+                <MenuItem Header="Kilépés" Command="{Binding ExitCommand}"></MenuItem>
             </MenuItem>
-            <MenuItem Header="Kinyitás"></MenuItem>
+            <MenuItem Header="Kinyitás" Command="{Binding OpenParkCommand}"></MenuItem>
         </Menu>
         <DockPanel>
             <DockPanel DockPanel.Dock="Left">
@@ -51,9 +51,12 @@
                 <StatusBar>
                     <StatusBarItem HorizontalAlignment="Center">
                         <StackPanel Orientation="Horizontal">
-                            <TextBlock Text="Money" FontSize="14"></TextBlock>
+                            <TextBlock Text="Money: " FontSize="14"></TextBlock>
+                            <TextBlock Text="{Binding Money}" FontSize="14"></TextBlock>
                             <TextBlock Text="Visitors" FontSize="14" Margin="12,0,0,0"></TextBlock>
                             <TextBlock Text="Games" FontSize="14" Margin="12,0,0,0"></TextBlock>
+                            <TextBlock Text="Time: " FontSize="14"></TextBlock>
+                            <TextBlock Text="{Binding Time}" FontSize="14"></TextBlock>
                         </StackPanel>
                     </StatusBarItem>
                 </StatusBar>

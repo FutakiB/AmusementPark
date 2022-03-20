@@ -30,7 +30,11 @@ namespace WeShallNotPass.Model
         public List<Game> Games
         {
             get { return _games; }
-            set { _games = value; }
+            set
+            {
+                _games = value;
+                ItemUpdated?.Invoke(this, EventArgs.Empty);
+            }
         }
 
         private List<Restaurant> _restaurants;
@@ -51,14 +55,22 @@ namespace WeShallNotPass.Model
         public List<Visitor> Visitors
         {
             get { return _visitors; }
-            set { _visitors = value; }
+            set
+            {
+                _visitors = value;
+                VisitorsUpdated?.Invoke(this, EventArgs.Empty);
+            }
         }
 
         private int _money;
         public int Money
         {
             get { return _money; }
-            set { _money = value; }
+            set
+            {
+                _money = value;
+                MoneyUpdated?.Invoke(this, EventArgs.Empty);
+            }
         }
 
         private bool _isCampaigning;
@@ -81,7 +93,11 @@ namespace WeShallNotPass.Model
         public int Time
         {
             get { return _time; }
-            set { _time = value; }
+            set
+            {
+                _time = value;
+                TimePassed?.Invoke(this, EventArgs.Empty);
+            }
         }
 
         #endregion
@@ -123,7 +139,8 @@ namespace WeShallNotPass.Model
 
         private void _timer_Tick(object sender, EventArgs e)
         {
-            Time += 1;
+            Time ++;
+            Money--;
         }
 
         public void NewGame()
