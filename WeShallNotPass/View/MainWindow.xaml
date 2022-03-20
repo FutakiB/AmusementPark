@@ -4,7 +4,11 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:WeShallNotPass"
-        xmlns:gif="http://wpfanimatedgif.codeplex.com" xmlns:viewmodel="clr-namespace:WeShallNotPass.ViewModel" d:DataContext="{d:DesignInstance Type=viewmodel:MainViewModel}"
+        xmlns:gif="http://wpfanimatedgif.codeplex.com" xmlns:viewmodel="clr-namespace:WeShallNotPass.ViewModel"
+        xmlns:visualBasic="clr-namespace:Microsoft.VisualBasic;assembly=Microsoft.VisualBasic.Core"
+        xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
+        xmlns:mvvm="http://www.galasoft.ch/mvvmlight"
+        d:DataContext="{d:DesignInstance Type=viewmodel:MainViewModel}"
         mc:Ignorable="d"
         Title="Vidámpark" Height="950" Width="1300" ResizeMode="NoResize" SizeToContent="Height">
     <DockPanel>
@@ -22,6 +26,12 @@
                     <ItemsControl.ItemsPanel>
                         <ItemsPanelTemplate>
                             <Canvas Height="896" Width="896">
+                                <i:Interaction.Triggers>
+                                    <i:EventTrigger EventName="MouseLeftButtonUp">
+                                        <mvvm:EventToCommand Command="{Binding CanvasClickCommand}" PassEventArgsToCommand="True"/>
+                                    </i:EventTrigger>
+                                </i:Interaction.Triggers>
+
                                 <Canvas.Background>
                                     <ImageBrush ImageSource="{Binding Background}"></ImageBrush>
                                 </Canvas.Background>

@@ -4,6 +4,9 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
+using System.Windows.Controls.Ribbon;
+using System.Windows.Input;
 using WeShallNotPass.Model;
 
 namespace WeShallNotPass.ViewModel
@@ -13,26 +16,42 @@ namespace WeShallNotPass.ViewModel
         private Model.Model _model;
         private Item selectedShopItem;
         private int lastSelectedIndex;
-        public Item SelectedItem { 
-            get {
+        public Item SelectedItem
+        { 
+            get
+            {
                 if (lastSelectedIndex == -1) throw new Exception("No shop item was selected.");
                 ManageSelection(lastSelectedIndex);
                 return selectedShopItem;
             } 
-            set {
+            set
+            {
                 selectedShopItem = value;
             }
         }
 
         public Uri Background { get; set; }
 
+        #region Commands
+
+        public DelegateCommand CanvasClickCommand { get; private set; }
+
+        #endregion
+
+        #region ObservableCollections
+
         public ObservableCollection<ItemViewModel> Items { get; private set; }
         public ObservableCollection<ShopItemViewModel> ShopItems { get; private set; }
+
+        #endregion
+
         public MainViewModel(Model.Model model)
         {
             _model = model;
             selectedShopItem = null;
             lastSelectedIndex = -1;
+
+            CanvasClickCommand = new DelegateCommand(args => OnCanvasClick(args as MouseEventArgs));
 
             Background = new Uri("/Images/background.png", UriKind.Relative);
             Items = new ObservableCollection<ItemViewModel>();
@@ -81,6 +100,14 @@ namespace WeShallNotPass.ViewModel
             InitShopItems();
             selectedShopItem = ShopItems.ElementAt(index).obj;
             ShopItems.ElementAt(index).IsSelected = true;
+        }
+
+        private void OnCanvasClick(MouseEventArgs args)
+        {
+            Point position = args.GetPosition(args.Device.Target);
+            int x = (int) position.X;
+            int y = (int) position.Y;
+
         }
     }
 }
