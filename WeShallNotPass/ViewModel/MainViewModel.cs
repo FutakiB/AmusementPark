@@ -16,11 +16,20 @@ namespace WeShallNotPass.ViewModel
         private int lastSelectedIndex;
         #endregion
 
+        #region Events
+        public event EventHandler NewGame;
+        public event EventHandler Exit;
+        public event EventHandler OpenPark;
+        #endregion
+
         #region Commands
-        public DelegateCommand NewGameCommand { get; private set; }
-        public DelegateCommand ExitCommand { get; private set; }
-        public DelegateCommand OpenParkCommand { get; private set; }
-        public DelegateCommand CloseParkCommand { get; private set; }
+        public DelegateCommand NewGameCommand { get; private set; } = new DelegateCommand(p =>
+        {
+            NewGame?.Invoke(p, EventArgs.Empty);
+        });
+        public DelegateCommand ExitCommand { get; private set; } = new DelegateCommand(p => OnExit());
+        public DelegateCommand OpenParkCommand { get; private set; } = new DelegateCommand(p => OnOpenPark());
+        //public DelegateCommand CloseParkCommand { get; private set; } = new DelegateCommand(p => OnClosePark());
         #endregion
 
         #region Properties
