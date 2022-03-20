@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Controls.Ribbon;
 using System.Windows.Input;
 using WeShallNotPass.Model;
@@ -16,6 +17,8 @@ namespace WeShallNotPass.ViewModel
         private Model.Model _model;
         private Item selectedShopItem;
         private int lastSelectedIndex;
+        private bool buildingMode;
+
         public Item SelectedItem
         { 
             get
@@ -31,6 +34,16 @@ namespace WeShallNotPass.ViewModel
         }
 
         public Uri Background { get; set; }
+
+        public bool BuildingMode
+        {
+            get => buildingMode;
+            set
+            {
+                buildingMode = value;
+                OnPropertyChanged();
+            }
+        }
 
         #region Commands
 
@@ -104,9 +117,36 @@ namespace WeShallNotPass.ViewModel
 
         private void OnCanvasClick(MouseEventArgs args)
         {
-            Point position = args.GetPosition(args.Device.Target);
-            int x = (int) position.X;
-            int y = (int) position.Y;
+            int x;
+            int y;
+
+            // An image was clicked on the canvas
+            if (args.OriginalSource is Image img)
+            {
+                ItemViewModel item = (ItemViewModel)img.DataContext;
+                x = item.X / 64;
+                y = item.Y / 64;
+            }
+            // The canvas was clicked
+            else
+            {
+                Point position = args.GetPosition(args.Device.Target);
+                x = (int)position.X / 64;
+                y = (int)position.Y / 64;
+            }
+
+            if (BuildingMode)
+            {
+                // Get a new instance of the selected shop item
+                Item buildItem = SelectedItem;
+                buildItem.X = x;
+                buildItem.Y = y;
+
+                if (!_model.Build(buildItem))
+                {
+                    MessageBox.Show("Ezt ide nem tudod letenni", "Vidámpark", MessageBoxButton.OK, MessageBoxImage.Information);
+                }
+            }
 
         }
     }
