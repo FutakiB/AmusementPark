@@ -23,13 +23,14 @@ namespace WeShallNotPass.ViewModel
         #endregion
 
         #region Commands
-        public DelegateCommand NewGameCommand { get; private set; } = new DelegateCommand(p =>
+        /*public DelegateCommand NewGameCommand { get; private set; } = new DelegateCommand(p =>
         {
             NewGame?.Invoke(p, EventArgs.Empty);
         });
         public DelegateCommand ExitCommand { get; private set; } = new DelegateCommand(p => OnExit());
         public DelegateCommand OpenParkCommand { get; private set; } = new DelegateCommand(p => OnOpenPark());
         //public DelegateCommand CloseParkCommand { get; private set; } = new DelegateCommand(p => OnClosePark());
+        */
         #endregion
 
         #region Properties
