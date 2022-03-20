@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Documents;
 using System.Windows.Threading;
 
 namespace WeShallNotPass.Model
@@ -11,7 +12,7 @@ namespace WeShallNotPass.Model
     {
         #region Properties
 
-        private Item[,] _gameArea;
+        private Item?[,] _gameArea;
         public Item[,] GameArea
         {
             get { return _gameArea; }
@@ -41,7 +42,7 @@ namespace WeShallNotPass.Model
         }
 
         private List<Restroom> _restrooms;
-        public List<Restroom> Restroom
+        public List<Restroom> Restrooms
         {
             get { return _restrooms; }
             set { _restrooms = value; }
@@ -117,9 +118,41 @@ namespace WeShallNotPass.Model
             throw new NotImplementedException();
         }
 
-        public void Build(Item item)
+        public Model()
         {
-            throw new NotImplementedException();
+            GameArea = new Item[14, 14];
+            Games = new List<Game>();
+            Restaurants = new List<Restaurant>();
+            Restrooms = new List<Restroom>();
+        }
+
+        public bool Build(Item item)
+        {
+            if (!CanBuildAt(item.X, item.Y, item.SizeX, item.SizeY))
+                return false;
+
+            for (int i = item.X; i < item.X + item.SizeX; i++)
+            {
+                for (int j = item.Y; j < item.Y + item.SizeY; j++)
+                {
+                    GameArea[i, j] = item;
+                }
+            }
+
+            switch (item)
+            {
+                case Game game:
+                    Games.Add(game);
+                    break;
+                case Restaurant restaurant:
+                    Restaurants.Add(restaurant);
+                    break;
+                case Restroom restroom:
+                    Restrooms.Add(restroom);
+                    break;
+            }
+
+            return true;
         }
 
         public void Demolish(Item item)
@@ -129,7 +162,15 @@ namespace WeShallNotPass.Model
 
         private bool CanBuildAt(int x, int y, int sizeX, int sizeY)
         {
-            throw new NotImplementedException();
+            for (int i = x; i < x + sizeX; i++)
+            {
+                for (int j = y; j < y + sizeY; j++)
+                {
+                    if (GameArea[i, j] != null) return false;
+                }
+            }
+
+            return true;
         }
 
         private void registerVisitor()
