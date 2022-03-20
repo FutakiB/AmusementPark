@@ -128,7 +128,7 @@ namespace WeShallNotPass.Model
 
         public void NewGame()
         {
-            _gameAreaSize = 16;
+            _gameAreaSize = 14;
             _gameArea = new Item[GameAreaSize, GameAreaSize];
             _games = new List<Game>();
             _restaurants = new List<Restaurant>();
