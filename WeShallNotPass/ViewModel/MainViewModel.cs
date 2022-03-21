@@ -18,6 +18,7 @@ namespace WeShallNotPass.ViewModel
         private Model.Model _model;
         private Item selectedShopItem;
         private int lastSelectedIndex;
+        private bool buildingMode;
         #endregion
 
         #region Events

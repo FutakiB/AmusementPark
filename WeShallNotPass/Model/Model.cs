@@ -31,11 +31,7 @@ namespace WeShallNotPass.Model
         public List<Game> Games
         {
             get { return _games; }
-            set
-            {
-                _games = value;
-                ItemUpdated?.Invoke(this, EventArgs.Empty);
-            }
+            set { _games = value; }
         }
 
         private List<Restaurant> _restaurants;
@@ -56,11 +52,7 @@ namespace WeShallNotPass.Model
         public List<Visitor> Visitors
         {
             get { return _visitors; }
-            set
-            {
-                _visitors = value;
-                VisitorsUpdated?.Invoke(this, EventArgs.Empty);
-            }
+            set { _visitors = value; }
         }
 
         private int _money;
@@ -135,8 +127,6 @@ namespace WeShallNotPass.Model
             _money = 10000;
             _isCampaigning = false;
             _time = 0;*/
-            NewGame();
-
         }
 
         private void _timer_Tick(object sender, EventArgs e)
@@ -147,7 +137,6 @@ namespace WeShallNotPass.Model
 
         public void NewGame()
         {
-            _gameAreaSize = 14;
             _gameArea = new Item[GameAreaSize, GameAreaSize];
             _games = new List<Game>();
             _restaurants = new List<Restaurant>();
@@ -157,8 +146,6 @@ namespace WeShallNotPass.Model
             _time = 0;
 
             _timer.Start();
-
-
         }
         public void OpenPark()
         {
@@ -168,14 +155,6 @@ namespace WeShallNotPass.Model
         public void ClosePark()
         {
             throw new NotImplementedException();
-        }
-
-        public Model()
-        {
-            GameArea = new Item[14, 14];
-            Games = new List<Game>();
-            Restaurants = new List<Restaurant>();
-            Restrooms = new List<Restroom>();
         }
 
         public bool Build(Item item)
