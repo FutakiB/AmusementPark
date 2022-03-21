@@ -197,7 +197,7 @@ namespace WeShallNotPass.Model
             int xEnd = x + sizeX;
             int yEnd = y + sizeY;
 
-            if (xEnd >= GameAreaSize || yEnd >= GameAreaSize) return false;
+            if (xEnd > GameAreaSize || yEnd > GameAreaSize) return false;
 
             for (int i = x; i < xEnd; i++)
             {
