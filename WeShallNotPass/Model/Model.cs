@@ -95,6 +95,7 @@ namespace WeShallNotPass.Model
         #region Events 
 
         public event EventHandler<EventArgs> ItemUpdated;
+        public event EventHandler<ItemEventArgs> ItemBuilt;
         public event EventHandler<EventArgs> VisitorsUpdated;
         public event EventHandler<EventArgs> CampaignUpdated;
         public event EventHandler<EventArgs> TimePassed;
@@ -152,6 +153,7 @@ namespace WeShallNotPass.Model
                     break;
             }
 
+            ItemBuilt?.Invoke(this, new ItemEventArgs(item));
             return true;
         }
 

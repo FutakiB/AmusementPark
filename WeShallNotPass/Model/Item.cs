@@ -8,20 +8,7 @@ namespace WeShallNotPass.Model
 {
     public class Item
     {
-        public Item(int x, int y, String name)
-        {
-            X = x;
-            Y = y;
-            Name = name;
-            SizeX = 1;
-            SizeY = 1;
-            Image = "";
-            Price = 0;
-            BuildTime = 0;
-            IsBuilt = false;
-        }
-
-        public Item(int x, int y, String name, int sx, int sy, String imageLocation, int price, int buildTime)
+        public Item(int x, int y, String name, int sx, int sy, Uri imageLocation, int price, int buildTime)
         {
             X = x;
             Y = y;
@@ -37,7 +24,7 @@ namespace WeShallNotPass.Model
         public String Name;
         public int X, Y;
         public int SizeX, SizeY;
-        public String Image;
+        public Uri Image;
         public int Price, BuildTime;
         public bool IsBuilt;
 
@@ -50,7 +37,7 @@ namespace WeShallNotPass.Model
     {
         public int Radius;
         public int MoodBoost;
-        public Plant(int x, int y, String name, int sx, int sy, String imageLocation, int price, int buildTime,
+        public Plant(int x, int y, String name, int sx, int sy, Uri imageLocation, int price, int buildTime,
             int radius, int mood) : base(x, y, name, sx, sy, imageLocation, price, buildTime)
         {
             Radius = radius;
@@ -64,7 +51,7 @@ namespace WeShallNotPass.Model
 
     public class Road : Item
     {
-        public Road(int x, int y, String name, int sx, int sy, String imageLocation, int price, int buildTime)
+        public Road(int x, int y, String name, int sx, int sy, Uri imageLocation, int price, int buildTime)
             : base(x, y, name, sx, sy, imageLocation, price, buildTime)
         {
             
@@ -74,7 +61,7 @@ namespace WeShallNotPass.Model
     public class Generator : Item
     {
         public int Radius;
-        public Generator(int x, int y, String name, int sx, int sy, String imageLocation, int price, int buildTime,
+        public Generator(int x, int y, String name, int sx, int sy, Uri imageLocation, int price, int buildTime,
             int rad) : base(x, y, name, sx, sy, imageLocation, price, buildTime)
         {
             Radius = rad;
@@ -89,7 +76,7 @@ namespace WeShallNotPass.Model
     public class MainEntrance : Generator
     {
         public int TicketPrice;
-        public MainEntrance(int x, int y, String name, int sx, int sy, String imageLocation, int price, int buildTime,
+        public MainEntrance(int x, int y, String name, int sx, int sy, Uri imageLocation, int price, int buildTime,
             int rad, int tp) : base(x, y, name, sx, sy, imageLocation, price, buildTime, rad)
         {
             TicketPrice = tp;
@@ -113,7 +100,7 @@ namespace WeShallNotPass.Model
         {
             return "Kapacitás: " + MaxCapacity + "\nNapi költség: " + RegularFee + "\nHasználati idő: " + Duration;
         }
-        public Facility(int x, int y, String name, int sx, int sy, String imageLocation, int price, int buildTime,
+        public Facility(int x, int y, String name, int sx, int sy, Uri imageLocation, int price, int buildTime,
             int capacity, int fee, int duration, Item[,] gamearea) : base(x, y, name, sx, sy, imageLocation, price, buildTime)
         {
             Queue = new List<Visitor>();
@@ -207,7 +194,7 @@ namespace WeShallNotPass.Model
         {
             return "Kapacitás: " + MaxCapacity + "\nNapi költség: " + RegularFee + "\nHasználati idő: " + Duration;
         }
-        public Restroom(int x, int y, String name, int sx, int sy, String imageLocation, int price, int buildTime,
+        public Restroom(int x, int y, String name, int sx, int sy, Uri imageLocation, int price, int buildTime,
             int capacity, int fee, int duration, Item[,] gamearea) : base(x, y, name, sx, sy, imageLocation, price, buildTime, capacity, fee, duration, gamearea) { }
     }
 
@@ -220,7 +207,7 @@ namespace WeShallNotPass.Model
             return "Kapacitás: " + MaxCapacity + "\nNapi költség: " + RegularFee + "\nHasználati idő: " + Duration
                 + "\nSzükséges kapacitás: " + MinCapacity + "\nJegyár: " + TicketPrice + "\nHasználati költség: " + OperationCost + "\nHangulatnövelés: " + MoodBoost;
         }
-        public Game(int x, int y, String name, int sx, int sy, String imageLocation, int price, int buildTime,
+        public Game(int x, int y, String name, int sx, int sy, Uri imageLocation, int price, int buildTime,
             int capacity, int fee, int duration, Item[,] gamearea,
             int mincap, int ticketprice, int cost, int mood) : base(x, y, name, sx, sy, imageLocation, price, buildTime, capacity, fee, duration, gamearea)
         {
@@ -240,7 +227,7 @@ namespace WeShallNotPass.Model
             return "Kapacitás: " + MaxCapacity + "\nNapi költség: " + RegularFee + "\nHasználati idő: " + Duration
                 + "\nBeszerzési ár:" + IngredientCost + "\nÉhségnövelés: " + HungerBoost;
         }
-        public Restaurant(int x, int y, String name, int sx, int sy, String imageLocation, int price, int buildTime,
+        public Restaurant(int x, int y, String name, int sx, int sy, Uri imageLocation, int price, int buildTime,
             int capacity, int fee, int duration, Item[,] gamearea,
             int foodp, int ingrcost, int boost) : base(x, y, name, sx, sy, imageLocation, price, buildTime, capacity, fee, duration, gamearea)
         {

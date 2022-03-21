@@ -70,7 +70,15 @@ namespace WeShallNotPass.ViewModel
             Items = new ObservableCollection<ItemViewModel>();
             ShopItems = new ObservableCollection<ShopItemViewModel>();
 
+            _model.ItemBuilt += _model_ItemBuilt;
+
             InitShopItems();
+        }
+
+        private void _model_ItemBuilt(object sender, ItemEventArgs e)
+        {
+            Item i = e.Item;
+            Items.Add(new ItemViewModel(i.Name, i.X * 64, i.Y * 64, 0, i.SizeX * 64, i.SizeY * 64, i.Image));
         }
 
         public void InitShopItems()
@@ -79,22 +87,22 @@ namespace WeShallNotPass.ViewModel
             ShopItems.Add(new ShopItemViewModel("Hullámvasút", // menu name
                 new Uri("/Images/placeholder.png", UriKind.Relative), // picture location
                 2, 2, 2600, 50, // sizeX, sizeY, cost, build time
-                new Game(-1,-1,"Hullámvasút",2,2, "/Images/placeholder.png",2600,50,26,50,30, null, 10, 100,400,30), // type, posX, posY, name, sizeX, sizeY, picture location, price, build time, specifics
+                new Game(-1,-1,"Hullámvasút",2,2, new Uri("/Images/placeholder.png", UriKind.Relative),2600,50,26,50,30, null, 10, 100,400,30), // type, posX, posY, name, sizeX, sizeY, picture location, price, build time, specifics
                 new DelegateCommand(t => ManageSelection(t as ShopItemViewModel)))); // select action
             ShopItems.Add(new ShopItemViewModel("Pálmafa", // menu name
                 new Uri("/Images/placeholder.png", UriKind.Relative), // picture location
                 1, 1, 300, 0, // sizeX, sizeY, cost, build time
-                new Plant(-1,-1,"Pálmafa",1,1,"", 300,0,5,20), // type, posX, posY, name, sizeX, sizeY, picture location, price, build time, specifics
+                new Plant(-1,-1,"Pálmafa",1,1, new Uri("/Images/placeholder.png", UriKind.Relative), 300,0,5,20), // type, posX, posY, name, sizeX, sizeY, picture location, price, build time, specifics
                 new DelegateCommand(t => ManageSelection(t as ShopItemViewModel))));
             ShopItems.Add(new ShopItemViewModel("Generátor",
                 new Uri("/Images/placeholder.png", UriKind.Relative),
                 1,1,500,30,
-                new Generator(-1,-1,"Generátor",1,1,"",500,30,4),
+                new Generator(-1,-1,"Generátor",1,1, new Uri("/Images/placeholder.png", UriKind.Relative), 500,30,4),
                 new DelegateCommand(t => ManageSelection(t as ShopItemViewModel))));
             ShopItems.Add(new ShopItemViewModel("Étterem",
                 new Uri("/Images/placeholder.png", UriKind.Relative),
                 1, 2, 1900, 40,
-                new Restaurant(-1,-1,"Étterem",1,2,"", 1900,40,20,400,10,null,20,10,50),
+                new Restaurant(-1,-1,"Étterem",1,2, new Uri("/Images/placeholder.png", UriKind.Relative), 1900,40,20,400,10,null,20,10,50),
                 new DelegateCommand(t => ManageSelection(t as ShopItemViewModel))));
         }
 
