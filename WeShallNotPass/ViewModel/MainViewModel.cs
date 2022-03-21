@@ -14,14 +14,33 @@ namespace WeShallNotPass.ViewModel
 {
     class MainViewModel : ViewModelBase
     {
+        #region Fields
         private Model.Model _model;
         private Item selectedShopItem;
         private int lastSelectedIndex;
-        private bool buildingMode;
+        #endregion
 
-        public Item SelectedItem
+        #region Events
+        public event EventHandler NewGame;
+        public event EventHandler Exit;
+        public event EventHandler OpenPark;
+        #endregion
+
+        #region Commands
+        
+        public DelegateCommand NewGameCommand { get; private set; }
+        public DelegateCommand ExitCommand { get; private set; }
+        public DelegateCommand OpenParkCommand { get; private set; }
+        //public DelegateCommand CloseParkCommand { get; private set; } = new DelegateCommand(p => OnClosePark());
+        public DelegateCommand CanvasClickCommand { get; private set; }
+
+        #endregion
+
+        #region Properties
+
+        public Item SelectedItem 
         { 
-            get
+            get 
             {
                 if (lastSelectedIndex == -1) throw new Exception("No shop item was selected.");
                 ManageSelection(lastSelectedIndex);
@@ -32,6 +51,7 @@ namespace WeShallNotPass.ViewModel
                 selectedShopItem = value;
             }
         }
+
 
         public Uri Background { get; set; }
 
@@ -45,9 +65,17 @@ namespace WeShallNotPass.ViewModel
             }
         }
 
-        #region Commands
+        public int Time
+        {
+            get { return _model.Time; }
+            private set { }
+        }
 
-        public DelegateCommand CanvasClickCommand { get; private set; }
+        public int Money
+        {
+            get { return _model.Money; }
+            private set { }
+        }
 
         #endregion
 
@@ -57,10 +85,21 @@ namespace WeShallNotPass.ViewModel
         public ObservableCollection<ShopItemViewModel> ShopItems { get; private set; }
 
         #endregion
+        
+        #region Constructor
 
         public MainViewModel(Model.Model model)
         {
             _model = model;
+            _model.TimePassed += new EventHandler<EventArgs>(timePassed);
+            _model.MoneyUpdated += new EventHandler<EventArgs>(moneyUpdated);
+            _model.ItemUpdated += new EventHandler<EventArgs>(itemUpdated);
+            _model.VisitorsUpdated += new EventHandler<EventArgs>(visitorsUpdated);
+
+            NewGameCommand = new DelegateCommand(p => OnNewGame());
+            ExitCommand = new DelegateCommand(p => Exit?.Invoke(this, EventArgs.Empty));
+            OpenParkCommand = new DelegateCommand(p => OpenPark?.Invoke(this, EventArgs.Empty));
+
             selectedShopItem = null;
             lastSelectedIndex = -1;
 
@@ -76,10 +115,35 @@ namespace WeShallNotPass.ViewModel
             ManageSelection(ShopItems[0]);
         }
 
+        #endregion
+
+        #region Methods
+
         private void _model_ItemBuilt(object sender, ItemEventArgs e)
         {
             Item i = e.Item;
             Items.Add(new ItemViewModel(i.Name, i.X * 64, i.Y * 64, 0, i.SizeX * 64, i.SizeY * 64, i.Image));
+        }
+        
+        private void visitorsUpdated(object sender, EventArgs e)
+        {
+            throw new NotImplementedException();
+        }
+
+        private void itemUpdated(object sender, EventArgs e)
+        {
+            throw new NotImplementedException();
+        }
+
+        private void moneyUpdated(object sender, EventArgs e)
+        {
+            OnPropertyChanged("Money");
+        }
+
+
+        public void timePassed(object sender, EventArgs e)
+        {
+            OnPropertyChanged("Time");
         }
 
         public void InitShopItems()
@@ -156,7 +220,14 @@ namespace WeShallNotPass.ViewModel
                     MessageBox.Show("Ezt ide nem tudod letenni", "Vidámpark", MessageBoxButton.OK, MessageBoxImage.Information);
                 }
             }
-
         }
+
+        private void OnNewGame()
+        {
+            _model.NewGame();
+            //NewGame?.Invoke(this, EventArgs.Empty));
+        }
+
+        #endregion
     }
 }
