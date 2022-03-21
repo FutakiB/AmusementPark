@@ -23,14 +23,12 @@ namespace WeShallNotPass.ViewModel
         #endregion
 
         #region Commands
-        /*public DelegateCommand NewGameCommand { get; private set; } = new DelegateCommand(p =>
-        {
-            NewGame?.Invoke(p, EventArgs.Empty);
-        });
-        public DelegateCommand ExitCommand { get; private set; } = new DelegateCommand(p => OnExit());
-        public DelegateCommand OpenParkCommand { get; private set; } = new DelegateCommand(p => OnOpenPark());
-        //public DelegateCommand CloseParkCommand { get; private set; } = new DelegateCommand(p => OnClosePark());
-        */
+        
+        public DelegateCommand NewGameCommand { get; private set; }
+        public DelegateCommand ExitCommand { get; private set; }
+        public DelegateCommand OpenParkCommand { get; private set; }
+         //public DelegateCommand CloseParkCommand { get; private set; } = new DelegateCommand(p => OnClosePark());
+         
         #endregion
 
         #region Properties
@@ -77,6 +75,10 @@ namespace WeShallNotPass.ViewModel
             _model.MoneyUpdated += new EventHandler<EventArgs>(moneyUpdated);
             _model.ItemUpdated += new EventHandler<EventArgs>(itemUpdated);
             _model.VisitorsUpdated += new EventHandler<EventArgs>(visitorsUpdated);
+
+            NewGameCommand = new DelegateCommand(p => OnNewGame());
+            ExitCommand = new DelegateCommand(p => Exit?.Invoke(this, EventArgs.Empty));
+            OpenParkCommand = new DelegateCommand(p => OpenPark?.Invoke(this, EventArgs.Empty));
 
             selectedShopItem = null;
             lastSelectedIndex = -1;
@@ -153,6 +155,15 @@ namespace WeShallNotPass.ViewModel
             ShopItems.ElementAt(index).IsSelected = true;
         }
 
+        #endregion
+
+        #region Event Handlers
+
+        private void OnNewGame()
+        {
+            _model.NewGame();
+            //NewGame?.Invoke(this, EventArgs.Empty));
+        }
         #endregion
     }
 }

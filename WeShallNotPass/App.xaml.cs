@@ -30,11 +30,17 @@ namespace WeShallNotPass
             _model.GameAreaSize = 14;
 
             _viewModel = new MainViewModel(_model);
-            
+            _viewModel.Exit += new EventHandler(ViewModel_Exit);
+
             _view = new MainWindow();
             _view.DataContext = _viewModel;
             _view.Closing += new System.ComponentModel.CancelEventHandler(View_Closing); // eseménykezelés a bezáráshoz
             _view.Show();
+        }
+
+        private void ViewModel_Exit(object sender, EventArgs e)
+        {
+            _view.Close();
         }
 
         private void View_Closing(object sender, CancelEventArgs e)
