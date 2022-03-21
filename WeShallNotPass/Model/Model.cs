@@ -194,9 +194,14 @@ namespace WeShallNotPass.Model
 
         private bool CanBuildAt(int x, int y, int sizeX, int sizeY)
         {
-            for (int i = x; i < x + sizeX; i++)
+            int xEnd = x + sizeX;
+            int yEnd = y + sizeY;
+
+            if (xEnd >= GameAreaSize || yEnd >= GameAreaSize) return false;
+
+            for (int i = x; i < xEnd; i++)
             {
-                for (int j = y; j < y + sizeY; j++)
+                for (int j = y; j < yEnd; j++)
                 {
                     if (GameArea[i, j] != null) return false;
                 }
