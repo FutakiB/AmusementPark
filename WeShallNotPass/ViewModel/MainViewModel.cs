@@ -73,6 +73,7 @@ namespace WeShallNotPass.ViewModel
             _model.ItemBuilt += _model_ItemBuilt;
 
             InitShopItems();
+            ManageSelection(ShopItems[0]);
         }
 
         private void _model_ItemBuilt(object sender, ItemEventArgs e)
