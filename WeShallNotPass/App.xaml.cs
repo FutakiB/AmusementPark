@@ -28,15 +28,16 @@ namespace WeShallNotPass
         {
             _model = new Model.Model();
             _model.GameAreaSize = 14;
-            _model.NewGame();
 
             _viewModel = new MainViewModel(_model);
             _viewModel.Exit += new EventHandler(ViewModel_Exit);
+            _model.NewGame();
 
             _view = new MainWindow();
             _view.DataContext = _viewModel;
             _view.Closing += new System.ComponentModel.CancelEventHandler(View_Closing);
             _view.Show();
+
         }
 
         private void ViewModel_Exit(object sender, EventArgs e)

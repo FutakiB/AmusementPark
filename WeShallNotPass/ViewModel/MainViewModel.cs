@@ -90,6 +90,7 @@ namespace WeShallNotPass.ViewModel
             _model.VisitorsUpdated += new EventHandler<EventArgs>(visitorsUpdated);
             _model.ErrorMessageCalled += new EventHandler<ErrorMessageEventArgs>(errorMessageCalled);
 
+
             NewGameCommand = new DelegateCommand(p => OnNewGame());
             ExitCommand = new DelegateCommand(p => Exit?.Invoke(this, EventArgs.Empty));
             OpenParkCommand = new DelegateCommand(p => OpenPark?.Invoke(this, EventArgs.Empty));
@@ -245,7 +246,9 @@ namespace WeShallNotPass.ViewModel
 
         private void OnNewGame()
         {
+            Items.Clear();
             _model.NewGame();
+
             //NewGame?.Invoke(this, EventArgs.Empty));
         }
 

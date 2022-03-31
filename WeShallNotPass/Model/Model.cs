@@ -108,6 +108,7 @@ namespace WeShallNotPass.Model
         public event EventHandler<EventArgs> CampaignUpdated;
         public event EventHandler<EventArgs> TimePassed;
         public event EventHandler<EventArgs> MoneyUpdated;
+        public event EventHandler<EventArgs> NewGameStarted;
         public event EventHandler<ErrorMessageEventArgs> ErrorMessageCalled;
 
         #endregion
@@ -119,15 +120,6 @@ namespace WeShallNotPass.Model
             _timer = new DispatcherTimer();
             _timer.Interval = new TimeSpan(0, 0, 0, 0, 100);
             _timer.Tick += _timer_Tick;
-
-            /*_gameAreaSize = 16;
-            _gameArea = new Item[GameAreaSize,GameAreaSize];
-            _games = new List<Game>();
-            _restaurants = new List<Restaurant>();
-            _restrooms = new List<Restroom>();
-            _money = 10000;
-            _isCampaigning = false;
-            _time = 0;*/
         }
 
         private void _timer_Tick(object sender, EventArgs e)
@@ -142,10 +134,14 @@ namespace WeShallNotPass.Model
             _restaurants = new List<Restaurant>();
             _restrooms = new List<Restroom>();
             _money = 15000;
+            MoneyUpdated?.Invoke(this, EventArgs.Empty);
             _isCampaigning = false;
             _time = 0;
+            TimePassed?.Invoke(this, EventArgs.Empty);
 
             _timer.Start();
+            Item gen = new Generator(6, 13, "mainGate", 2, 1, new Uri("/Images/placeholder.png", UriKind.Relative), 0, 0, 5);
+            Build(gen);
         }
         public void OpenPark()
         {
