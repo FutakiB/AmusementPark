@@ -10,7 +10,7 @@
         xmlns:mvvm="http://www.galasoft.ch/mvvmlight"
         d:DataContext="{d:DesignInstance Type=viewmodel:MainViewModel}"
         mc:Ignorable="d"
-        Title="Vidámpark" Height="950" Width="1300" ResizeMode="NoResize" SizeToContent="Height">
+        Title="Vidámpark" Height="980" Width="1300" ResizeMode="NoResize">
     <DockPanel>
         <Menu DockPanel.Dock="Top">
             <MenuItem Header="Játék">
@@ -80,7 +80,7 @@
                     <RowDefinition Height="1*"></RowDefinition>
                 </Grid.RowDefinitions>
                 <ScrollViewer>
-                    <ItemsControl ItemsSource="{Binding ShopItems}" Grid.Row="0" ScrollViewer.CanContentScroll= "True" ScrollViewer.VerticalScrollBarVisibility="Visible" Background="#604fa1">
+                    <ItemsControl ItemsSource="{Binding ShopItems}" Grid.Row="0" ScrollViewer.CanContentScroll= "True" ScrollViewer.VerticalScrollBarVisibility="Visible" Background="#c1dae5">
                         <ItemsControl.ItemsPanel>
                             <ItemsPanelTemplate>
                                 <StackPanel Orientation="Vertical"></StackPanel>
@@ -89,15 +89,17 @@
                         <ItemsControl.ItemTemplate>
                             <DataTemplate>
                                 <StackPanel Margin="1 1 1 1">
-                                    <Button HorizontalContentAlignment="Left" HorizontalAlignment="Stretch" BorderBrush="Transparent" Command="{Binding SelectCommand}" CommandParameter="{Binding}" ClickMode="Release">
+                                    <Button HorizontalContentAlignment="Left" HorizontalAlignment="Stretch" Command="{Binding SelectCommand}" CommandParameter="{Binding}" ClickMode="Release">
                                         <Button.Style>
                                             <Style TargetType="Button">
                                                 <Style.Triggers>
                                                     <DataTrigger Binding="{Binding IsSelected}" Value="true">
-                                                        <Setter Property="Background" Value="#83cffb"></Setter>
+                                                        <Setter Property="Background" Value="#bee6fd"></Setter>
+                                                        <Setter Property="BorderBrush" Value="#597e94"></Setter>
                                                     </DataTrigger>
                                                     <DataTrigger Binding="{Binding IsSelected}" Value="false">
                                                         <Setter Property="Background" Value="Transparent"></Setter>
+                                                        <Setter Property="BorderBrush" Value="Transparent"></Setter>
                                                     </DataTrigger>
                                                 </Style.Triggers>
                                             </Style>
@@ -134,7 +136,7 @@
                     </ItemsControl>
                 </ScrollViewer>
                 <GridSplitter Grid.Row="1" VerticalAlignment="Center" HorizontalAlignment="Stretch"></GridSplitter>
-                <ScrollViewer Grid.Row="2" VerticalScrollBarVisibility="Visible" Background="#FFBDE4F0">
+                <ScrollViewer Grid.Row="2" VerticalScrollBarVisibility="Visible" Background="#efe4eb">
                     <StackPanel VerticalAlignment="Top" HorizontalAlignment="Left">
                         <StackPanel Orientation="Horizontal" Margin="12">
                             <TextBlock Text="Key:" FontSize="16"></TextBlock>
