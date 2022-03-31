@@ -66,17 +66,9 @@ namespace WeShallNotPass.ViewModel
             }
         }
 
-        public int Time
-        {
-            get { return _model.Time; }
-            private set { }
-        }
-
-        public int Money
-        {
-            get { return _model.Money; }
-            private set { }
-        }
+        public int Time => _model.Time;
+        public int Money => _model.Money;
+        public int GameCount => _model.Games.Count;
 
         #endregion
 
@@ -116,8 +108,6 @@ namespace WeShallNotPass.ViewModel
             InitShopItems();
             ManageSelection(ShopItems[0]);
         }
-
-        
 
         #endregion
 
@@ -248,10 +238,8 @@ namespace WeShallNotPass.ViewModel
                 buildItem.X = x;
                 buildItem.Y = y;
 
-                if (!_model.Build(buildItem))
-                {
-                    //MessageBox.Show("Ezt ide nem tudod letenni", "Vidámpark", MessageBoxButton.OK, MessageBoxImage.Information);
-                }
+                _model.Build(buildItem);
+                OnPropertyChanged("GameCount");
             }
         }
 
