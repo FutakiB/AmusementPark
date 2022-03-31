@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace WeShallNotPass.Model
 {
-    internal class ErrorMessageEventArgs: EventArgs
+    public class ErrorMessageEventArgs: EventArgs
     {
         private readonly string _message;
 
@@ -15,7 +15,7 @@ namespace WeShallNotPass.Model
             this._message = message;
         }
 
-        public string Test
+        public string Message
         {
             get { return this._message; }
         }

@@ -96,6 +96,7 @@ namespace WeShallNotPass.ViewModel
             _model.MoneyUpdated += new EventHandler<EventArgs>(moneyUpdated);
             _model.ItemUpdated += new EventHandler<EventArgs>(itemUpdated);
             _model.VisitorsUpdated += new EventHandler<EventArgs>(visitorsUpdated);
+            _model.ErrorMessageCalled += new EventHandler<ErrorMessageEventArgs>(errorMessageCalled);
 
             NewGameCommand = new DelegateCommand(p => OnNewGame());
             ExitCommand = new DelegateCommand(p => Exit?.Invoke(this, EventArgs.Empty));
@@ -116,6 +117,8 @@ namespace WeShallNotPass.ViewModel
             ManageSelection(ShopItems[0]);
         }
 
+        
+
         #endregion
 
         #region Methods
@@ -125,7 +128,11 @@ namespace WeShallNotPass.ViewModel
             Item i = e.Item;
             Items.Add(new ItemViewModel(i.Name, i.X * 64, i.Y * 64, 0, i.SizeX * 64, i.SizeY * 64, i.Image));
         }
-        
+        private void errorMessageCalled(object sender, ErrorMessageEventArgs e)
+        {
+            MessageBox.Show(e.Message, "Vidámpark", MessageBoxButton.OK, MessageBoxImage.Information);
+        }
+
         private void visitorsUpdated(object sender, EventArgs e)
         {
             throw new NotImplementedException();
@@ -243,7 +250,7 @@ namespace WeShallNotPass.ViewModel
 
                 if (!_model.Build(buildItem))
                 {
-                    MessageBox.Show("Ezt ide nem tudod letenni", "Vidámpark", MessageBoxButton.OK, MessageBoxImage.Information);
+                    //MessageBox.Show("Ezt ide nem tudod letenni", "Vidámpark", MessageBoxButton.OK, MessageBoxImage.Information);
                 }
             }
         }

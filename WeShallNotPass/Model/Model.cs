@@ -61,8 +61,16 @@ namespace WeShallNotPass.Model
             get { return _money; }
             set
             {
-                _money = value;
-                MoneyUpdated?.Invoke(this, EventArgs.Empty);
+                if (value > 0)
+                {
+                    _money = value;
+                    MoneyUpdated?.Invoke(this, EventArgs.Empty);
+
+                }
+                else
+                {
+                    ErrorMessageCalled?.Invoke(this, new ErrorMessageEventArgs("Nincs Elég pénzed!"));
+                }
             }
         }
 
@@ -108,6 +116,7 @@ namespace WeShallNotPass.Model
         public event EventHandler<EventArgs> CampaignUpdated;
         public event EventHandler<EventArgs> TimePassed;
         public event EventHandler<EventArgs> MoneyUpdated;
+        public event EventHandler<ErrorMessageEventArgs> ErrorMessageCalled;
 
         #endregion
 
@@ -132,7 +141,6 @@ namespace WeShallNotPass.Model
         private void _timer_Tick(object sender, EventArgs e)
         {
             Time ++;
-            Money--;
         }
 
         public void NewGame()
@@ -141,7 +149,7 @@ namespace WeShallNotPass.Model
             _games = new List<Game>();
             _restaurants = new List<Restaurant>();
             _restrooms = new List<Restroom>();
-            _money = 10000;
+            _money = 200;
             _isCampaigning = false;
             _time = 0;
 
@@ -159,7 +167,7 @@ namespace WeShallNotPass.Model
 
         public bool Build(Item item)
         {
-            if (!CanBuildAt(item.X, item.Y, item.SizeX, item.SizeY))
+            if (!CanBuildAt(item.X, item.Y, item.SizeX, item.SizeY, item))
                 return false;
 
             for (int i = item.X; i < item.X + item.SizeX; i++)
@@ -184,6 +192,7 @@ namespace WeShallNotPass.Model
             }
 
             ItemBuilt?.Invoke(this, new ItemEventArgs(item));
+            Money -= item.Price;
             return true;
         }
 
@@ -192,10 +201,16 @@ namespace WeShallNotPass.Model
             throw new NotImplementedException();
         }
 
-        private bool CanBuildAt(int x, int y, int sizeX, int sizeY)
+        private bool CanBuildAt(int x, int y, int sizeX, int sizeY, Item item )
         {
             int xEnd = x + sizeX;
             int yEnd = y + sizeY;
+
+            if (item.Price > Money)
+            {
+                ErrorMessageCalled?.Invoke(this, new ErrorMessageEventArgs("Nincs Elég pénzed!"));
+                return false;
+            }
 
             if (xEnd > GameAreaSize || yEnd > GameAreaSize) return false;
 
@@ -203,7 +218,13 @@ namespace WeShallNotPass.Model
             {
                 for (int j = y; j < yEnd; j++)
                 {
-                    if (GameArea[i, j] != null) return false;
+                    
+                    if (GameArea[i, j] != null)
+                    {
+                        ErrorMessageCalled?.Invoke(this, new ErrorMessageEventArgs("Ezt ide nem tudod letenni!"));
+                        return false;
+                    }
+
                 }
             }
 
