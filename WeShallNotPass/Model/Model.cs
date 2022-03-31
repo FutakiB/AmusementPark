@@ -140,7 +140,7 @@ namespace WeShallNotPass.Model
             TimePassed?.Invoke(this, EventArgs.Empty);
 
             _timer.Start();
-            Item gen = new Generator(6, 13, "mainGate", 2, 1, new Uri("/Images/main_gate1.png", UriKind.Relative), 0, 0, 5);
+            Item gen = new Generator(6, 13, "mainGate", 2, 1, new Uri("/Images/placeholder.png", UriKind.Relative), 0, 0, 5);
             Build(gen);
         }
         public void OpenPark()
