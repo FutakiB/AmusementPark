@@ -7,7 +7,21 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Images\generator.png" />
+    <None Remove="Images\gifs\carousel.gif" />
+    <None Remove="Images\gifs\ferris_wheel.gif" />
+    <None Remove="Images\gifs\roller.gif" />
+    <None Remove="Images\gifs\rollercoaster.gif" />
+    <None Remove="Images\palmtree.png" />
+    <None Remove="Images\path.png" />
     <None Remove="Images\placeholder.png" />
+    <None Remove="Images\restaurant.png" />
+    <None Remove="Images\restaurant2.png" />
+    <None Remove="Images\restaureant.png" />
+    <None Remove="Images\stills\carousel.gif" />
+    <None Remove="Images\stills\ferris_wheel.gif" />
+    <None Remove="Images\stills\roller.gif" />
+    <None Remove="Images\stills\rollercoaster.gif" />
   </ItemGroup>
 
   <ItemGroup>
@@ -17,7 +31,20 @@
 
   <ItemGroup>
     <Resource Include="Images\background.png" />
+    <Resource Include="Images\generator.png" />
+    <Resource Include="Images\gifs\carousel.gif" />
+    <Resource Include="Images\gifs\ferris_wheel.gif" />
+    <Resource Include="Images\gifs\roller.gif" />
+    <Resource Include="Images\gifs\rollercoaster.gif" />
+    <Resource Include="Images\palmtree.png" />
+    <Resource Include="Images\path.png" />
     <Resource Include="Images\placeholder.png" />
+    <Resource Include="Images\restaurant.png" />
+    <Resource Include="Images\restaurant2.png" />
+    <Resource Include="Images\stills\carousel.gif" />
+    <Resource Include="Images\stills\ferris_wheel.gif" />
+    <Resource Include="Images\stills\roller.gif" />
+    <Resource Include="Images\stills\rollercoaster.gif" />
   </ItemGroup>
 
 </Project>

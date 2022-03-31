@@ -150,25 +150,50 @@ namespace WeShallNotPass.ViewModel
         public void InitShopItems()
         {
             ShopItems.Clear();
+            ShopItems.Add(new ShopItemViewModel("Út",
+               new Uri("/Images/path.png", UriKind.Relative),
+               1, 1, 100, 0,
+               new Road(-1,-1,"Út",1,1, new Uri("/Images/path.png", UriKind.Relative), 100,0),
+               new DelegateCommand(t => ManageSelection(t as ShopItemViewModel))));
             ShopItems.Add(new ShopItemViewModel("Hullámvasút", // menu name
-                new Uri("/Images/placeholder.png", UriKind.Relative), // picture location
-                2, 2, 2600, 50, // sizeX, sizeY, cost, build time
-                new Game(-1,-1,"Hullámvasút",2,2, new Uri("/Images/placeholder.png", UriKind.Relative),2600,50,26,50,30, null, 10, 100,400,30), // type, posX, posY, name, sizeX, sizeY, picture location, price, build time, specifics
+                new Uri("/Images/gifs/rollercoaster.gif", UriKind.Relative), // picture location
+                3, 3, 2600, 50, // sizeX, sizeY, cost, build time
+                new Game(-1,-1,"Hullámvasút",3,3, new Uri("/Images/stills/rollercoaster.gif", UriKind.Relative),2600,50,26,50,30, null, 10, 100,400,30), // type, posX, posY, name, sizeX, sizeY, picture location, price, build time, specifics
                 new DelegateCommand(t => ManageSelection(t as ShopItemViewModel)))); // select action
+            ShopItems.Add(new ShopItemViewModel("Körhinta",
+                new Uri("/Images/gifs/carousel.gif", UriKind.Relative),
+                1, 1, 2200, 25,
+                new Game(-1, -1, "Körhinta", 1, 1, new Uri("/Images/stills/carousel.gif", UriKind.Relative), 2200, 25, 12, 30, 20, null, 6, 40, 220, 18),
+                new DelegateCommand(t => ManageSelection(t as ShopItemViewModel))));
+            ShopItems.Add(new ShopItemViewModel("Óriáskerék",
+                new Uri("/Images/gifs/ferris_wheel.gif", UriKind.Relative),
+                2, 2, 3600, 60,
+                new Game(-1, -1, "Körhinta", 2, 2, new Uri("/Images/stills/ferris_wheel.gif", UriKind.Relative), 3600, 60, 50, 60, 40, null, 20, 70, 390, 30),
+                new DelegateCommand(t => ManageSelection(t as ShopItemViewModel))));
+            ShopItems.Add(new ShopItemViewModel("Kamikaze",
+                new Uri("/Images/gifs/roller.gif", UriKind.Relative),
+                2, 2,2600, 35,
+                new Game(-1, -1, "Kamikaize", 2, 2, new Uri("/Images/stills/roller.gif", UriKind.Relative), 2600, 35, 30, 40, 30, null, 15, 38, 250, 25),
+                new DelegateCommand(t => ManageSelection(t as ShopItemViewModel))));
             ShopItems.Add(new ShopItemViewModel("Pálmafa", // menu name
-                new Uri("/Images/placeholder.png", UriKind.Relative), // picture location
+                new Uri("/Images/palmtree.png", UriKind.Relative), // picture location
                 1, 1, 300, 0, // sizeX, sizeY, cost, build time
-                new Plant(-1,-1,"Pálmafa",1,1, new Uri("/Images/placeholder.png", UriKind.Relative), 300,0,5,20), // type, posX, posY, name, sizeX, sizeY, picture location, price, build time, specifics
+                new Plant(-1,-1,"Pálmafa",1,1, new Uri("/Images/palmtree.png", UriKind.Relative), 300,0,5,20), // type, posX, posY, name, sizeX, sizeY, picture location, price, build time, specifics
                 new DelegateCommand(t => ManageSelection(t as ShopItemViewModel))));
             ShopItems.Add(new ShopItemViewModel("Generátor",
-                new Uri("/Images/placeholder.png", UriKind.Relative),
+                new Uri("/Images/generator.png", UriKind.Relative),
                 1,1,500,30,
-                new Generator(-1,-1,"Generátor",1,1, new Uri("/Images/placeholder.png", UriKind.Relative), 500,30,4),
+                new Generator(-1,-1,"Generátor",1,1, new Uri("/Images/generator.png", UriKind.Relative), 500,30,4),
                 new DelegateCommand(t => ManageSelection(t as ShopItemViewModel))));
-            ShopItems.Add(new ShopItemViewModel("Étterem",
-                new Uri("/Images/placeholder.png", UriKind.Relative),
-                1, 2, 1900, 40,
-                new Restaurant(-1,-1,"Étterem",1,2, new Uri("/Images/placeholder.png", UriKind.Relative), 1900,40,20,400,10,null,20,10,50),
+            ShopItems.Add(new ShopItemViewModel("Gyorsétterem",
+                new Uri("/Images/restaurant.png", UriKind.Relative),
+                2, 2, 1900, 40,
+                new Restaurant(-1,-1,"Gyorsétterem",2,2, new Uri("/Images/restaurant.png", UriKind.Relative), 1900,40,20,400,10,null,20,10,50),
+                new DelegateCommand(t => ManageSelection(t as ShopItemViewModel))));
+            ShopItems.Add(new ShopItemViewModel("Kávézó",
+                new Uri("/Images/restaurant2.png", UriKind.Relative),
+                2, 2, 1200, 23,
+                new Restaurant(-1,-1,"Kávézó",2,2, new Uri("/Images/restaurant2.png", UriKind.Relative), 1200,23,14,260,5,null,5,5,20),
                 new DelegateCommand(t => ManageSelection(t as ShopItemViewModel))));
         }
 

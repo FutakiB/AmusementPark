@@ -201,7 +201,26 @@ namespace WeShallNotPass.Model
     public class Game : Facility
     {
         public int MinCapacity, TicketPrice, OperationCost, MoodBoost;
-        public bool isOperating;
+        private bool isOperating;
+        public bool IsOperating
+        {
+            get { return isOperating; }
+            set
+            {
+                if (value == false)
+                {
+                    String str = Image.ToString().Substring(13);
+                    Image = new Uri("/Images/stills/" + str, UriKind.Relative);
+                    isOperating = value;
+                } else
+                {
+                    String str = Image.ToString().Substring(15);
+                    Image = new Uri("/Images/gifs/" + str, UriKind.Relative);
+                    isOperating = value;
+                }
+            }
+        }
+
         public override string UniqueShopString()
         {
             return "Kapacitás: " + MaxCapacity + "\nNapi költség: " + RegularFee + "\nHasználati idő: " + Duration
@@ -215,7 +234,7 @@ namespace WeShallNotPass.Model
             TicketPrice = ticketprice;
             OperationCost = cost;
             MoodBoost = mood;
-            isOperating = false;
+            IsOperating = true;
         }
     }
 

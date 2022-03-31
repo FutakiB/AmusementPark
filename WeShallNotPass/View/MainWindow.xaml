@@ -46,7 +46,7 @@
                                 gif:ImageBehavior.AnimatedSource="{Binding Image}"
                                 Width="{Binding SizeX}"
                                 Height="{Binding SizeY}"
-                                Stretch="UniformToFill"></Image>
+                                Stretch="Uniform"></Image>
                         </DataTemplate>
                     </ItemsControl.ItemTemplate>
 
