@@ -30,6 +30,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\WeShallNotPass.Model\WeShallNotPass.Model.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Resource Include="Images\background.png" />
     <Resource Include="Images\generator.png" />
     <Resource Include="Images\gifs\carousel.gif" />

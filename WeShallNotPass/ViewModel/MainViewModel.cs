@@ -140,7 +140,7 @@ namespace WeShallNotPass.ViewModel
         }
 
 
-        public void timePassed(object sender, EventArgs e)
+        private void timePassed(object sender, EventArgs e)
         {
             OnPropertyChanged("Time");
         }

@@ -1,10 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Documents;
-using System.Windows.Threading;
+using System.Timers;
 
 namespace WeShallNotPass.Model
 {
@@ -95,11 +91,6 @@ namespace WeShallNotPass.Model
 
         #endregion
 
-        #region Fields
-
-        private DispatcherTimer _timer;
-        #endregion
-
         #region Events 
 
         public event EventHandler<EventArgs> ItemUpdated;
@@ -117,12 +108,9 @@ namespace WeShallNotPass.Model
 
         public Model()
         {
-            _timer = new DispatcherTimer();
-            _timer.Interval = new TimeSpan(0, 0, 0, 0, 100);
-            _timer.Tick += _timer_Tick;
         }
 
-        private void _timer_Tick(object sender, EventArgs e)
+        public void Tick()
         {
             Time++;
         }
@@ -139,7 +127,6 @@ namespace WeShallNotPass.Model
             _time = 0;
             TimePassed?.Invoke(this, EventArgs.Empty);
 
-            _timer.Start();
             Item gen = new Generator(6, 13, "mainGate", 2, 1, new Uri("/Images/placeholder.png", UriKind.Relative), 0, 0, 5);
             Build(gen);
         }

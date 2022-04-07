@@ -6,6 +6,7 @@ using System.Data;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Threading;
 using WeShallNotPass.ViewModel;
 
 namespace WeShallNotPass
@@ -18,6 +19,7 @@ namespace WeShallNotPass
         private Model.Model _model;
         private MainWindow _view;
         private MainViewModel _viewModel;
+        private DispatcherTimer _timer;
 
         public App()
         {
@@ -26,6 +28,10 @@ namespace WeShallNotPass
 
         private void App_Startup(object sender, StartupEventArgs e)
         {
+            _timer = new DispatcherTimer();
+            _timer.Interval = new TimeSpan(0, 0, 0, 0, 100);
+            _timer.Tick += _timer_Tick;
+
             _model = new Model.Model();
             _model.GameAreaSize = 14;
 
@@ -38,6 +44,12 @@ namespace WeShallNotPass
             _view.Closing += new System.ComponentModel.CancelEventHandler(View_Closing);
             _view.Show();
 
+            _timer.Start();
+        }
+
+        private void _timer_Tick(object sender, EventArgs e)
+        {
+            _model.Tick();
         }
 
         private void ViewModel_Exit(object sender, EventArgs e)
