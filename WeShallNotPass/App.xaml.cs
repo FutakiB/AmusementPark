@@ -28,7 +28,7 @@ namespace WeShallNotPass
 
         private void App_Startup(object sender, StartupEventArgs e)
         {
-            _timer = new DispatcherTimer();
+            _timer = new DispatcherTimer(DispatcherPriority.Send);
             _timer.Interval = new TimeSpan(0, 0, 0, 0, 100);
             _timer.Tick += _timer_Tick;
 
