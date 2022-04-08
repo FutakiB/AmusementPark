@@ -137,12 +137,49 @@
                 </ScrollViewer>
                 <GridSplitter Grid.Row="1" VerticalAlignment="Center" HorizontalAlignment="Stretch"></GridSplitter>
                 <ScrollViewer Grid.Row="2" VerticalScrollBarVisibility="Visible" Background="#efe4eb">
-                    <StackPanel VerticalAlignment="Top" HorizontalAlignment="Left">
+                    <!--<StackPanel VerticalAlignment="Top" HorizontalAlignment="Left">
                         <StackPanel Orientation="Horizontal" Margin="12">
                             <TextBlock Text="Key:" FontSize="16"></TextBlock>
                             <TextBlock Text="Value" FontSize="16" Margin="8,0,0,0"></TextBlock>
                         </StackPanel>
-                    </StackPanel>
+                    </StackPanel>-->
+                    <ItemsControl ItemsSource="{Binding InfoItems}" ScrollViewer.CanContentScroll= "True" ScrollViewer.VerticalScrollBarVisibility="Visible" Margin="4,4,4,4">
+                        <ItemsControl.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <StackPanel Orientation="Vertical"></StackPanel>
+                            </ItemsPanelTemplate>
+                        </ItemsControl.ItemsPanel>
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <StackPanel Orientation="Horizontal" Margin="3,1,1,1">
+                                    <TextBlock Text="{Binding Text}" FontSize="16"></TextBlock>
+                                    <TextBlock Text="{Binding Value}" FontSize="16" Margin="8,0,0,0">
+                                        <TextBlock.Style>
+                                            <Style TargetType="TextBlock">
+                                                <Style.Triggers>
+                                                    <DataTrigger Binding="{Binding IsEditable}" Value="true">
+                                                        <Setter Property="Visibility" Value="Collapsed"/>
+                                                        <Setter Property="Margin" Value="0"/>
+                                                    </DataTrigger>
+                                                </Style.Triggers>
+                                            </Style>
+                                        </TextBlock.Style>
+                                    </TextBlock>
+                                    <TextBox Text="{Binding Value}" AcceptsTab="False" FontSize="14" Padding="2,1,2,1" Width="60">
+                                        <TextBox.Style>
+                                            <Style TargetType="TextBox">
+                                                <Style.Triggers>
+                                                    <DataTrigger Binding="{Binding IsEditable}" Value="false">
+                                                        <Setter Property="Visibility" Value="Collapsed"></Setter>
+                                                    </DataTrigger>
+                                                </Style.Triggers>
+                                            </Style>
+                                        </TextBox.Style>
+                                    </TextBox>
+                                </StackPanel>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
                 </ScrollViewer>
             </Grid>
         </DockPanel>

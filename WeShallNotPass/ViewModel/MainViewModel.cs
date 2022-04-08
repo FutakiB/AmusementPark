@@ -76,6 +76,7 @@ namespace WeShallNotPass.ViewModel
 
         public ObservableCollection<ItemViewModel> Items { get; private set; }
         public ObservableCollection<ShopItemViewModel> ShopItems { get; private set; }
+        public ObservableCollection<InfoItemViewModel> InfoItems { get; private set; }
 
         #endregion
         
@@ -103,6 +104,7 @@ namespace WeShallNotPass.ViewModel
             Background = new Uri("/Images/background.png", UriKind.Relative);
             Items = new ObservableCollection<ItemViewModel>();
             ShopItems = new ObservableCollection<ShopItemViewModel>();
+            InfoItems = new ObservableCollection<InfoItemViewModel>();
 
             _model.ItemBuilt += _model_ItemBuilt;
 
@@ -117,7 +119,7 @@ namespace WeShallNotPass.ViewModel
         private void _model_ItemBuilt(object sender, ItemEventArgs e)
         {
             Item i = e.Item;
-            Items.Add(new ItemViewModel(i.Name, i.X * 64, i.Y * 64, 0, i.SizeX * 64, i.SizeY * 64, i.Image));
+            Items.Add(new ItemViewModel(i.Name, i.X * 64, i.Y * 64, 0, i.SizeX * 64, i.SizeY * 64, i.Image, i));
         }
         private void errorMessageCalled(object sender, ErrorMessageEventArgs e)
         {
@@ -216,11 +218,12 @@ namespace WeShallNotPass.ViewModel
         {
             int x;
             int y;
+            ItemViewModel item = null;
 
             // An image was clicked on the canvas
             if (args.OriginalSource is Image img)
             {
-                ItemViewModel item = (ItemViewModel)img.DataContext;
+                item = (ItemViewModel)img.DataContext;
                 x = item.X / 64;
                 y = item.Y / 64;
             }
@@ -241,6 +244,33 @@ namespace WeShallNotPass.ViewModel
 
                 _model.Build(buildItem);
                 OnPropertyChanged("GameCount");
+            } else if (item != null) {
+                InfoItems.Clear();
+                if (item.Visitor == null)
+                {
+                    Dictionary<string, int> list = item.Item.GetInfoPanelItems();
+                    InfoItems.Add(new InfoItemViewModel(item.Item.Name, -3, false, item.Item, -1));
+                    if (list == null)
+                    {
+                        InfoItems.Add(new InfoItemViewModel("Nincs elérhető információ.", -3, false, item.Item,-1));
+                        return;
+                    }
+                    for (int i = 0; i < list.Count; i++)
+                    {
+                        InfoItems.Add(new InfoItemViewModel(list.ElementAt(i).Key, list.ElementAt(i).Value, false, item.Item, -1));
+                    }
+                    list = item.Item.GetEditableProperty();
+                    if (item.Item.GetEditableProperty() != null)
+                    {
+                        for (int i = 0; i < list.Count; i++)
+                        {
+                            InfoItems.Add(new InfoItemViewModel(list.ElementAt(i).Key, list.ElementAt(i).Value, true, item.Item, i));
+                        }
+                    }
+                } else
+                {
+
+                }
             }
         }
 

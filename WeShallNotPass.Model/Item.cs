@@ -25,11 +25,27 @@ namespace WeShallNotPass.Model
         public int X, Y;
         public int SizeX, SizeY;
         public Uri Image;
-        public int Price, BuildTime;
+        public int Price;
         public bool IsBuilt;
+        public int BuildTime;
 
         public virtual string UniqueShopString() {
             return "";
+        }
+
+        public virtual Dictionary<string, int> GetInfoPanelItems()
+        {
+            return null;
+        }
+
+        public virtual Dictionary<string, int> GetEditableProperty()
+        {
+            return null;
+        }
+
+        public virtual void SetEditableProperty(List<int> l)
+        {
+            return;
         }
     }
 
@@ -42,6 +58,14 @@ namespace WeShallNotPass.Model
         {
             Radius = radius;
             MoodBoost = mood;
+        }
+
+        public override Dictionary<string, int> GetInfoPanelItems()
+        {
+            Dictionary<string, int> list = new Dictionary<string, int>();
+            list.Add("Hatáskörnyezet: ", Radius);
+            list.Add("Hangulatnövelés: ", MoodBoost);
+            return list;
         }
 
         public override string UniqueShopString() {
@@ -67,6 +91,13 @@ namespace WeShallNotPass.Model
             Radius = rad;
         }
 
+        public override Dictionary<string, int> GetInfoPanelItems()
+        {
+            Dictionary<string, int> list = new Dictionary<string, int>();
+            list.Add("Hatáskörnyezet: ", Radius);
+            return list;
+        }
+
         public override string UniqueShopString()
         {
             return "Hatáskörnyezet: " + Radius;
@@ -86,9 +117,19 @@ namespace WeShallNotPass.Model
         {
             return "Belépő ár: " + TicketPrice;
         }
-    }
 
-    //public partial class Visitor { }
+        public override Dictionary<string, int> GetEditableProperty()
+        {
+            Dictionary<string, int> list = new Dictionary<string, int>();
+            list.Add("Jegyár: ", TicketPrice);
+            return list;
+        }
+
+        public override void SetEditableProperty(List<int> l)
+        {
+            TicketPrice = l[0];
+        }
+    }
 
     public class Facility : Item
     {
@@ -190,6 +231,17 @@ namespace WeShallNotPass.Model
 
     public class Restroom : Facility
     {
+        public override Dictionary<string, int> GetInfoPanelItems()
+        {
+            Dictionary<string, int> list = new Dictionary<string, int>();
+            list.Add("Kapacitás: ", MaxCapacity);
+            list.Add("Várakozók: ", Queue.Count);
+            list.Add("Napi költség: ", RegularFee);
+            list.Add("Használati idő: ", Duration);
+            list.Add("Ellátva árammal: ", HasPower ? -2 : -1);
+            list.Add("Elérhető: ", IsReachable ? -2 : -1);
+            return list;
+        }
         public override string UniqueShopString()
         {
             return "Kapacitás: " + MaxCapacity + "\nNapi költség: " + RegularFee + "\nHasználati idő: " + Duration;
@@ -220,6 +272,33 @@ namespace WeShallNotPass.Model
                 }
             }
         }
+        public override Dictionary<string, int> GetEditableProperty()
+        {
+            Dictionary<string, int> list = new Dictionary<string, int>();
+            list.Add("Jegyár: ", TicketPrice);
+            list.Add("Induláshoz szükséges várakozók száma: ", MinCapacity);
+            return list;
+        }
+
+        public override void SetEditableProperty(List<int> l)
+        {
+            TicketPrice = l[0];
+            MinCapacity = l[1];
+        }
+
+        public override Dictionary<string, int> GetInfoPanelItems()
+        {
+            Dictionary<string, int> list = new Dictionary<string, int>();
+            list.Add("Kapacitás: ", MaxCapacity);
+            list.Add("Várakozók: ", Queue.Count);
+            list.Add("Napi költség: ", RegularFee);
+            list.Add("Használati idő: ", Duration);
+            list.Add("Ellátva árammal: ", HasPower ? -2 : -1);
+            list.Add("Elérhető: ", IsReachable ? -2 : -1);
+            list.Add("Alkalmi költség: ", OperationCost);
+            list.Add("Hangulatnövelés: ", MoodBoost);
+            return list;
+        }
 
         public override string UniqueShopString()
         {
@@ -240,7 +319,32 @@ namespace WeShallNotPass.Model
 
     public class Restaurant : Facility
     {
-        int FoodPrice, IngredientCost, HungerBoost;
+        public int FoodPrice, IngredientCost, HungerBoost;
+
+        public override Dictionary<string, int> GetInfoPanelItems()
+        {
+            Dictionary<string, int> list = new Dictionary<string, int>();
+            list.Add("Kapacitás: ", MaxCapacity);
+            list.Add("Várakozók: ", Queue.Count);
+            list.Add("Napi költség: ", RegularFee);
+            list.Add("Használati idő: ", Duration);
+            list.Add("Alkalmi költség: ", IngredientCost);
+            list.Add("Éhségoltás: ", HungerBoost);
+            list.Add("Ellátva árammal: ", HasPower ? -2 : -1);
+            list.Add("Elérhető: ", IsReachable ? -2 : -1);
+            return list;
+        }
+        public override Dictionary<string, int> GetEditableProperty()
+        {
+            Dictionary<string, int> list = new Dictionary<string, int>();
+            list.Add("Egy menü ára: ", FoodPrice);
+            return list;
+        }
+
+        public override void SetEditableProperty(List<int> l)
+        {
+            FoodPrice = l[0];
+        }
         public override string UniqueShopString()
         {
             return "Kapacitás: " + MaxCapacity + "\nNapi költség: " + RegularFee + "\nHasználati idő: " + Duration

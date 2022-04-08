@@ -127,7 +127,7 @@ namespace WeShallNotPass.Model
             _time = 0;
             TimePassed?.Invoke(this, EventArgs.Empty);
 
-            Item gen = new Generator(6, 13, "mainGate", 2, 1, new Uri("/Images/placeholder.png", UriKind.Relative), 0, 0, 5);
+            Item gen = new MainEntrance(6, 13, "mainGate", 2, 1, new Uri("/Images/placeholder.png", UriKind.Relative), 0, 0, 5, 400);
             Build(gen);
         }
         public void OpenPark()
