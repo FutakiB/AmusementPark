@@ -3,12 +3,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using WeShallNotPass.Model;
 
 namespace WeShallNotPass.Model
 {
 
     public enum VisitorsStatus { AT_ACTIVITY, WALKING, WAITING}
-    public partial class Visitor
+    public class Visitor
     {
 
 
@@ -93,9 +94,24 @@ namespace WeShallNotPass.Model
             throw new NotImplementedException();
         }
 
-        public void NextActivity()
+        public void NextActivity(List<Restroom> restrooms, List<Restaurant> restaurants, MainEntrance mainEntrance)
         {
-            throw new NotImplementedException();
+            if (Mood > 0)
+            {
+                Random rnd = new Random();
+                if (RestroomNeeds > Hunger)
+                {
+                    Destination = restrooms[rnd.Next(restrooms.Count)];
+                }
+                else
+                {
+                    Destination = restaurants[rnd.Next(restrooms.Count)];
+                }
+            } else
+            {
+                Destination = mainEntrance;
+                //or just disappear
+            }
         }
 
         private void FindPath()
