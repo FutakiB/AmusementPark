@@ -94,29 +94,66 @@ namespace WeShallNotPass.Model
             throw new NotImplementedException();
         }
 
-        public void NextActivity(List<Restroom> restrooms, List<Restaurant> restaurants, MainEntrance mainEntrance)
+        public void NextActivity(List<Restroom> restrooms, List<Restaurant> restaurants,List<Game> games, MainEntrance mainEntrance)
         {
             if (Mood > 0)
             {
                 Random rnd = new Random();
-                if (RestroomNeeds > Hunger)
+                if (RestroomNeeds > 50 || Hunger > 50)
                 {
-                    Destination = restrooms[rnd.Next(restrooms.Count)];
+                    if (RestroomNeeds > Hunger)
+                    {
+                        Destination = restrooms[rnd.Next(restrooms.Count)];
+                    }
+                    else
+                    {
+                        Destination = restaurants[rnd.Next(restrooms.Count)];
+                    }
                 }
                 else
                 {
-                    Destination = restaurants[rnd.Next(restrooms.Count)];
+                    Destination = games[rnd.Next(games.Count)];
                 }
             } else
             {
                 Destination = mainEntrance;
-                //or just disappear
             }
         }
 
-        private void FindPath()
+        private void FindPath(Item[,] gameArea, int gameAreaSize)
         {
             throw new NotImplementedException();
+            int[,] edgeColor = new int[14, 14];
+            int[,] parent = new int[14, 14];
+            parent[X, Y] = 0;
+            Queue<(int, int)> queue = new Queue<(int, int)> ();
+            queue.Enqueue((this.X, this.Y));
+            while (queue.Count > 0)
+            {
+                (int x, int y) = queue.Dequeue();
+                if ( x+1  < gameAreaSize &&  gameArea[x + 1, y] is Road)
+                {
+
+                }
+                if (x - 1 > 0 && gameArea[x - 1, y] is Road)
+                {
+
+                }
+                if (y + 1 < gameAreaSize && gameArea[x, y + 1] is Road)
+                {
+
+                }
+                if (y - 1 > 0 && gameArea[x, y - 1] is Road)
+                {
+
+                }
+            }
+
+            /*
+             adott locationon megnézi minden fele hogy út van e és
+             és ha igen akkor bekerül ka queuba.ű
+             
+             */
         }
         #endregion
 
