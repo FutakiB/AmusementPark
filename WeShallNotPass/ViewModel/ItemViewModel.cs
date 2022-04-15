@@ -14,12 +14,23 @@ namespace WeShallNotPass.ViewModel
         public int Z { get; set; }
         public int SizeX { get; set; }
         public int SizeY { get; set; }
-        public Uri Image { get; set; }
-        public bool IsBuilt { get; set; }
+        private Uri image;
+        public Uri Image { 
+            get {
+                if (Visitor == null) return Item.Image; else return image;
+            }
+            set { }
+        }
+        public bool IsBuilt { get {
+                if (Visitor == null) return Item.IsBuilt; else return false;
+            } set {
+                
+            } 
+        }
         public Model.Item Item { get; private set; }
         public Model.Visitor Visitor { get; private set; }
 
-        public ItemViewModel(string name, int x, int y, int z, int sizeX, int sizeY, Uri image, Model.Item i)
+        public ItemViewModel(string name, int x, int y, int z, int sizeX, int sizeY, Uri cimage, Model.Item i)
         {
             Name = name;
             X = x;
@@ -27,12 +38,13 @@ namespace WeShallNotPass.ViewModel
             Z = z;
             SizeX = sizeX;
             SizeY = sizeY;
-            Image = image;
             Item = i;
+            Item.ImageChanged += Item_ImageChanged;
+            image = cimage;
             Visitor = null;
         }
-        
-        public ItemViewModel(string name, int x, int y, int z, int sizeX, int sizeY, Uri image, Model.Visitor v)
+
+        public ItemViewModel(string name, int x, int y, int z, int sizeX, int sizeY, Uri cimage, Model.Visitor v)
         {
             Name = name;
             X = x;
@@ -40,9 +52,14 @@ namespace WeShallNotPass.ViewModel
             Z = z;
             SizeX = sizeX;
             SizeY = sizeY;
-            Image = image;
             Item = null;
+            image = cimage;
             Visitor = v;
+        }
+        private void Item_ImageChanged(object sender, EventArgs e)
+        {
+            OnPropertyChanged("Image");
+            OnPropertyChanged("IsBuilt");
         }
     }
 }

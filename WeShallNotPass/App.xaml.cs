@@ -34,6 +34,7 @@ namespace WeShallNotPass
 
             _model = new Model.Model();
             _model.GameAreaSize = 14;
+            _model.TimerChanged += _model_TimerChanged;
 
             _viewModel = new MainViewModel(_model);
             _viewModel.Exit += new EventHandler(ViewModel_Exit);
@@ -45,6 +46,24 @@ namespace WeShallNotPass
             _view.Show();
 
             _timer.Start();
+        }
+
+        private void _model_TimerChanged(object sender,  Model.ErrorMessageEventArgs e)
+        {
+            switch (e.Message)
+            {
+                case "normal":
+                    _timer.Start();
+                    _timer.Interval = new TimeSpan(0, 0, 0, 0, 100);
+                    break;
+                case "fast":
+                    _timer.Start();
+                    _timer.Interval = new TimeSpan(0, 0, 0, 0, 50);
+                    break;
+                case "stop":
+                    _timer.Stop();
+                    break;
+            }
         }
 
         private void _timer_Tick(object sender, EventArgs e)

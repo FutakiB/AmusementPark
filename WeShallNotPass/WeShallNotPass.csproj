@@ -7,8 +7,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Images\entrance.png" />
     <None Remove="Images\generator.png" />
     <None Remove="Images\gifs\carousel.gif" />
+    <None Remove="Images\gifs\construction.gif" />
     <None Remove="Images\gifs\ferris_wheel.gif" />
     <None Remove="Images\gifs\roller.gif" />
     <None Remove="Images\gifs\rollercoaster.gif" />
@@ -22,6 +24,16 @@
     <None Remove="Images\stills\ferris_wheel.gif" />
     <None Remove="Images\stills\roller.gif" />
     <None Remove="Images\stills\rollercoaster.gif" />
+    <None Remove="Images\visitor_blue.png" />
+    <None Remove="Images\visitor_green.png" />
+    <None Remove="Images\visitor_purple.png" />
+    <None Remove="Images\visitor_red.png" />
+    <None Remove="Images\visitor_yellow.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="Images\entrance.png" />
+    <Resource Include="Images\gifs\construction.gif" />
   </ItemGroup>
 
   <ItemGroup>
@@ -49,6 +61,11 @@
     <Resource Include="Images\stills\ferris_wheel.gif" />
     <Resource Include="Images\stills\roller.gif" />
     <Resource Include="Images\stills\rollercoaster.gif" />
+    <Resource Include="Images\visitor_blue.png" />
+    <Resource Include="Images\visitor_green.png" />
+    <Resource Include="Images\visitor_purple.png" />
+    <Resource Include="Images\visitor_red.png" />
+    <Resource Include="Images\visitor_yellow.png" />
   </ItemGroup>
 
 </Project>

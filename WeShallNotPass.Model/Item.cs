@@ -16,18 +16,41 @@ namespace WeShallNotPass.Model
             SizeX = sx;
             SizeY = sy;
             Image = imageLocation;
+            originalUri = Image.ToString();
             Price = price;
             BuildTime = buildTime;
-            IsBuilt = false;
+            if (buildTime <= 0) isBuilt = true; else IsBuilt = false;
         }
 
+        protected string originalUri;
         public String Name;
         public int X, Y;
         public int SizeX, SizeY;
-        public Uri Image;
+        private Uri image;
+        public Uri Image
+        {
+            get
+            {
+                return image;
+            }
+            set
+            {
+                image = value;
+                ImageChanged?.Invoke(this, new EventArgs());
+            }
+        }
         public int Price;
-        public bool IsBuilt;
-        public int BuildTime;
+        private bool isBuilt;
+        public bool IsBuilt { get { return isBuilt; } set
+            {
+                isBuilt = value;
+                if (isBuilt == false) Image = new Uri("/Images/gifs/construction.gif", UriKind.Relative);
+                    else Image = new Uri(originalUri, UriKind.Relative);
+            }
+        }
+        public int BuildTime { get; set; }
+
+        public event EventHandler<EventArgs> ImageChanged;
 
         public virtual string UniqueShopString() {
             return "";
@@ -63,6 +86,7 @@ namespace WeShallNotPass.Model
         public override Dictionary<string, int> GetInfoPanelItems()
         {
             Dictionary<string, int> list = new Dictionary<string, int>();
+            if (!IsBuilt) list.Add("Hátralévő építési idő: ", BuildTime);
             list.Add("Hatáskörnyezet: ", Radius);
             list.Add("Hangulatnövelés: ", MoodBoost);
             return list;
@@ -94,6 +118,7 @@ namespace WeShallNotPass.Model
         public override Dictionary<string, int> GetInfoPanelItems()
         {
             Dictionary<string, int> list = new Dictionary<string, int>();
+            if (!IsBuilt) list.Add("Hátralévő építési idő: ", BuildTime);
             list.Add("Hatáskörnyezet: ", Radius);
             return list;
         }
@@ -133,7 +158,7 @@ namespace WeShallNotPass.Model
 
     public class Facility : Item
     {
-        public List<Visitor> Queue;
+        public Queue<Visitor> VisitorQueue;
         public int MaxCapacity, RegularFee, Duration;
         public bool HasPower, IsReachable;
 
@@ -144,16 +169,15 @@ namespace WeShallNotPass.Model
         public Facility(int x, int y, String name, int sx, int sy, Uri imageLocation, int price, int buildTime,
             int capacity, int fee, int duration, Item[,] gamearea) : base(x, y, name, sx, sy, imageLocation, price, buildTime)
         {
-            Queue = new List<Visitor>();
+            VisitorQueue = new Queue<Visitor>();
             MaxCapacity = capacity;
             RegularFee = fee;
             Duration = duration;
-            HasPower = CheckPower(gamearea);
-            IsReachable = CheckRechaibility(gamearea);
+            HasPower = false;
+            IsReachable = false;
         }
-        public bool CheckPower(Item[,] ga)
+        public void CheckPower(Item[,] ga)
         {
-            if (ga == null) return false;
             foreach (Item i in ga)
             {
                 if (i is Generator)
@@ -165,67 +189,65 @@ namespace WeShallNotPass.Model
 
                     if (Math.Abs(xDiff) < g.Radius && Math.Abs(yDiff) < g.Radius)
                     {
-                        return true;
+                        HasPower = true;
                     }
                 }
             }
-            
-            return false;
         }
-        bool CheckRechaibility(Item[,] ga)
+        public void CheckRechaibility(in Item[,] ga)
         {
-            if (ga == null) return false;
             Item entrance = null;
             //look for entrance to reference position, can be changed to receive as parameter
             //use Item::IsBuilt as a "found" variable for BFS
+            int height = ga.GetLength(1); // y coords
+            int width = ga.GetLength(0); // x coords
+            bool[,] Found = new bool[height, width];
+            for (int i = 0; i < height; i++) for (int j = 0; j < width; j++) Found[i, j] = false;
             foreach (Item i in ga)
             {
-                i.IsBuilt = false; // not found yet
-                if (i.GetType() == typeof(MainEntrance))
+                if (i != null && i.GetType() == typeof(MainEntrance))
                 {
                     entrance = i;
+                    break;
                 }
             }
             if (entrance == null) throw new Exception("No entrance found.");
-            int height = ga.GetLength(1); // y coords
-            int width = ga.GetLength(0); // x coords
 
             Queue<Item> q = new Queue<Item>();
             q.Enqueue(entrance);
             while (q.Count != 0)
             {
                 Item cur = q.Dequeue();
-                if (cur == this) return true;
-                cur.IsBuilt = true; //found
+                if (cur == this)
+                {
+                    IsReachable = true;
+                    return;
+                }
+                for (int i=cur.X;i<cur.X+cur.SizeX;i++) for (int j=cur.Y;j<cur.Y+cur.SizeY;j++) Found[i, j] = true; //found
+                if (cur.GetType() != typeof(Road) && cur.GetType() != typeof(MainEntrance)) continue;
 
                 int nextX = cur.X - 1, nextY = cur.Y;
-                if (nextX >= 0 && nextX < width && nextY >= 0 && nextY < height)
+                if (nextX >= 0 && nextX < width && nextY >= 0 && nextY < height && ga[nextX, nextY] != null)
                 {
-                    if (ga[nextX, nextY].IsBuilt == false &&
-                        ga[nextX, nextY].GetType() == typeof(Road)) q.Enqueue(ga[nextX, nextY]);
+                    if (Found[nextX, nextY] == false) q.Enqueue(ga[nextX, nextY]);
                 }
                 nextX = cur.X + 1; nextY = cur.Y;
-                if (nextX >= 0 && nextX < width && nextY >= 0 && nextY < height)
+                if (nextX >= 0 && nextX < width && nextY >= 0 && nextY < height && ga[nextX, nextY] != null)
                 {
-                    if (ga[nextX, nextY].IsBuilt == false &&
-                        ga[nextX, nextY].GetType() == typeof(Road)) q.Enqueue(ga[nextX, nextY]);
+                    if (Found[nextX, nextY] == false) q.Enqueue(ga[nextX, nextY]);
                 }
                 nextX = cur.X; nextY = cur.Y - 1;
-                if (nextX >= 0 && nextX < width && nextY >= 0 && nextY < height)
+                if (nextX >= 0 && nextX < width && nextY >= 0 && nextY < height && ga[nextX, nextY] != null)
                 {
-                    if (ga[nextX, nextY].IsBuilt == false &&
-                        ga[nextX, nextY].GetType() == typeof(Road)) q.Enqueue(ga[nextX, nextY]);
+                    if (Found[nextX, nextY] == false) q.Enqueue(ga[nextX, nextY]);
                 }
                 nextX = cur.X; nextY = cur.Y + 1;
-                if (nextX >= 0 && nextX < width && nextY >= 0 && nextY < height)
+                if (nextX >= 0 && nextX < width && nextY >= 0 && nextY < height && ga[nextX, nextY] != null)
                 {
-                    if (ga[nextX, nextY].IsBuilt == false &&
-                        ga[nextX, nextY].GetType() == typeof(Road)) q.Enqueue(ga[nextX, nextY]);
+                    if (Found[nextX, nextY] == false) q.Enqueue(ga[nextX, nextY]);
                 }
 
             }
-            
-            return false;
         }
     }
 
@@ -234,8 +256,9 @@ namespace WeShallNotPass.Model
         public override Dictionary<string, int> GetInfoPanelItems()
         {
             Dictionary<string, int> list = new Dictionary<string, int>();
+            if (!IsBuilt) list.Add("Hátralévő építési idő: ", BuildTime);
             list.Add("Kapacitás: ", MaxCapacity);
-            list.Add("Várakozók: ", Queue.Count);
+            list.Add("Várakozók: ", VisitorQueue.Count);
             list.Add("Napi költség: ", RegularFee);
             list.Add("Használati idő: ", Duration);
             list.Add("Ellátva árammal: ", HasPower ? -2 : -1);
@@ -259,17 +282,20 @@ namespace WeShallNotPass.Model
             get { return isOperating; }
             set
             {
-                if (value == false)
+                isOperating = value;
+                if (IsBuilt)
                 {
-                    String str = Image.ToString().Substring(13);
-                    Image = new Uri("/Images/stills/" + str, UriKind.Relative);
-                    isOperating = value;
-                } else
-                {
-                    String str = Image.ToString().Substring(15);
-                    Image = new Uri("/Images/gifs/" + str, UriKind.Relative);
-                    isOperating = value;
+                    if (value == false)
+                    {
+                        String str = Image.ToString().Substring(13);
+                        Image = new Uri("/Images/stills/" + str, UriKind.Relative);
+                    } else
+                    {
+                        String str = Image.ToString().Substring(15);
+                        Image = new Uri("/Images/gifs/" + str, UriKind.Relative);
+                    } 
                 }
+                
             }
         }
         public override Dictionary<string, int> GetEditableProperty()
@@ -283,14 +309,16 @@ namespace WeShallNotPass.Model
         public override void SetEditableProperty(List<int> l)
         {
             TicketPrice = l[0];
+            if (l[1] > MaxCapacity) throw new ArgumentOutOfRangeException("Minimum capacity cannot be higher than max capacity.");
             MinCapacity = l[1];
         }
 
         public override Dictionary<string, int> GetInfoPanelItems()
         {
             Dictionary<string, int> list = new Dictionary<string, int>();
+            if (!IsBuilt) list.Add("Hátralévő építési idő: ", BuildTime);
             list.Add("Kapacitás: ", MaxCapacity);
-            list.Add("Várakozók: ", Queue.Count);
+            list.Add("Várakozók: ", VisitorQueue.Count);
             list.Add("Napi költség: ", RegularFee);
             list.Add("Használati idő: ", Duration);
             list.Add("Ellátva árammal: ", HasPower ? -2 : -1);
@@ -324,8 +352,9 @@ namespace WeShallNotPass.Model
         public override Dictionary<string, int> GetInfoPanelItems()
         {
             Dictionary<string, int> list = new Dictionary<string, int>();
+            if (!IsBuilt) list.Add("Hátralévő építési idő: ", BuildTime);
             list.Add("Kapacitás: ", MaxCapacity);
-            list.Add("Várakozók: ", Queue.Count);
+            list.Add("Várakozók: ", VisitorQueue.Count);
             list.Add("Napi költség: ", RegularFee);
             list.Add("Használati idő: ", Duration);
             list.Add("Alkalmi költség: ", IngredientCost);
