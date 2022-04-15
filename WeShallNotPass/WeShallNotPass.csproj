@@ -7,6 +7,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Images\characters\cyan.png" />
+    <None Remove="Images\characters\green.png" />
+    <None Remove="Images\characters\red.png" />
+    <None Remove="Images\characters\yellow.png" />
     <None Remove="Images\generator.png" />
     <None Remove="Images\gifs\carousel.gif" />
     <None Remove="Images\gifs\ferris_wheel.gif" />
@@ -35,6 +39,10 @@
 
   <ItemGroup>
     <Resource Include="Images\background.png" />
+    <Resource Include="Images\characters\cyan.png" />
+    <Resource Include="Images\characters\green.png" />
+    <Resource Include="Images\characters\red.png" />
+    <Resource Include="Images\characters\yellow.png" />
     <Resource Include="Images\generator.png" />
     <Resource Include="Images\gifs\carousel.gif" />
     <Resource Include="Images\gifs\ferris_wheel.gif" />
