@@ -108,6 +108,7 @@ namespace WeShallNotPass.Model
 
         public event EventHandler<ItemEventArgs> ItemUpdated;
         public event EventHandler<VisitorEventArgs> VisitorUpdated;
+        public event EventHandler<VisitorEventArgs> VisitorRemoved;
         public event EventHandler<EventArgs> CampaignUpdated;
         public event EventHandler<EventArgs> TimePassed;
         public event EventHandler<EventArgs> MoneyUpdated;
@@ -148,7 +149,7 @@ namespace WeShallNotPass.Model
             IsOpen = false;
             TimePassed?.Invoke(this, EventArgs.Empty);
 
-            mainEntrance = new MainEntrance(6, 13, "mainGate", 2, 1, new Uri("/Images/placeholder.png", UriKind.Relative), 0, 0, 5, 40);
+            mainEntrance = new MainEntrance(6, 13, "Bejárat", 2, 1, new Uri("/Images/placeholder.png", UriKind.Relative), 0, 0, 5, 40);
             Build(mainEntrance);
         }
 
@@ -264,6 +265,12 @@ namespace WeShallNotPass.Model
             VisitorUpdated?.Invoke(this, new VisitorEventArgs(v));
 
             Money += mainEntrance.TicketPrice;
+        }
+
+        private void RemoveVisitor(Visitor v)
+        {
+            Visitors.Remove(v);
+            VisitorRemoved(this, new VisitorEventArgs(v));
         }
         #endregion
     }

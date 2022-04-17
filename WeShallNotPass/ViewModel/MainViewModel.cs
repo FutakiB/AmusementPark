@@ -91,6 +91,7 @@ namespace WeShallNotPass.ViewModel
             _model.MoneyUpdated += new EventHandler<EventArgs>(moneyUpdated);
             _model.ItemUpdated += _model_ItemUpdated;
             _model.VisitorUpdated += _model_VisitorUpdated;
+            _model.VisitorRemoved += _model_VisitorRemoved;
             _model.ErrorMessageCalled += new EventHandler<ErrorMessageEventArgs>(errorMessageCalled);
             _model.ParkOpenedOrClosed += _model_ParkOpenedOrClosed;
 
@@ -165,6 +166,23 @@ namespace WeShallNotPass.ViewModel
             else
             {
                 Items[ind] = CreateItemViewModel(v);
+            }
+        }
+
+        private void _model_VisitorRemoved(object sender, VisitorEventArgs e)
+        {
+            Visitor v = e.Visitor;
+            int ind = 0;
+
+            while (ind < Items.Count && Items[ind].Visitor != v)
+            {
+                ind++;
+            }
+
+            if(ind < Items.Count)
+            {
+                Items.RemoveAt(ind);
+                OnPropertyChanged("VisitorCount");
             }
         }
 
@@ -301,7 +319,7 @@ namespace WeShallNotPass.ViewModel
                     }
                 } else
                 {
-
+                    
                 }
             }
         }
