@@ -11,8 +11,10 @@
     <None Remove="Images\characters\green.png" />
     <None Remove="Images\characters\red.png" />
     <None Remove="Images\characters\yellow.png" />
+    <None Remove="Images\entrance.png" />
     <None Remove="Images\generator.png" />
     <None Remove="Images\gifs\carousel.gif" />
+    <None Remove="Images\gifs\construction.gif" />
     <None Remove="Images\gifs\ferris_wheel.gif" />
     <None Remove="Images\gifs\roller.gif" />
     <None Remove="Images\gifs\rollercoaster.gif" />
@@ -26,6 +28,11 @@
     <None Remove="Images\stills\ferris_wheel.gif" />
     <None Remove="Images\stills\roller.gif" />
     <None Remove="Images\stills\rollercoaster.gif" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="Images\entrance.png" />
+    <Resource Include="Images\gifs\construction.gif" />
   </ItemGroup>
 
   <ItemGroup>

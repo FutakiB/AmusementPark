@@ -18,6 +18,11 @@
                 <MenuItem Header="Kilépés" Command="{Binding ExitCommand}"></MenuItem>
             </MenuItem>
             <MenuItem Header="Kinyitás" Command="{Binding OpenParkCommand}" IsEnabled="{Binding IsClosed}"></MenuItem>
+            <MenuItem Header="Sebesség">
+                <RadioButton IsHitTestVisible="True" Command="{Binding PauseCommand}" ClipToBounds="True">Megállít</RadioButton>
+                <RadioButton Command="{Binding NormalSpeedCommand}">Normál</RadioButton>
+                <RadioButton Command="{Binding FastSpeedCommand}">Gyors</RadioButton>
+            </MenuItem>
             <MenuItem Header="Építés" IsCheckable="True" IsChecked="{Binding BuildingMode}"></MenuItem>
         </Menu>
         <DockPanel>
@@ -172,6 +177,12 @@
                                                 <Style.Triggers>
                                                     <DataTrigger Binding="{Binding IsEditable}" Value="false">
                                                         <Setter Property="Visibility" Value="Collapsed"></Setter>
+                                                    </DataTrigger>
+                                                    <DataTrigger Binding="{Binding IsBuilt}" Value="false">
+                                                        <Setter Property="IsEnabled" Value="False"></Setter>
+                                                    </DataTrigger>
+                                                    <DataTrigger Binding="{Binding IsBuilt}" Value="true">
+                                                        <Setter Property="IsEnabled" Value="True"></Setter>
                                                     </DataTrigger>
                                                 </Style.Triggers>
                                             </Style>

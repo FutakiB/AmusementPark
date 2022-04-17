@@ -17,6 +17,7 @@ namespace WeShallNotPass.ViewModel
         #region Fields
         private Model.Model _model;
         private Item selectedShopItem;
+        private ItemViewModel selectedInfoItem;
         private int lastSelectedIndex;
         private bool buildingMode;
         #endregion
@@ -34,6 +35,9 @@ namespace WeShallNotPass.ViewModel
         public DelegateCommand OpenParkCommand { get; private set; }
         //public DelegateCommand CloseParkCommand { get; private set; } = new DelegateCommand(p => OnClosePark());
         public DelegateCommand CanvasClickCommand { get; private set; }
+        public DelegateCommand PauseCommand { get; private set; }
+        public DelegateCommand NormalSpeedCommand { get; private set; }
+        public DelegateCommand FastSpeedCommand { get; private set; }
 
         #endregion
 
@@ -99,8 +103,12 @@ namespace WeShallNotPass.ViewModel
             NewGameCommand = new DelegateCommand(p => OnNewGame());
             ExitCommand = new DelegateCommand(p => Exit?.Invoke(this, EventArgs.Empty));
             OpenParkCommand = new DelegateCommand(p => model.OpenPark());
+            PauseCommand = new DelegateCommand(p => _model.ChangeTimer("stop"));
+            NormalSpeedCommand = new DelegateCommand(p => _model.ChangeTimer("normal"));
+            FastSpeedCommand = new DelegateCommand(p => _model.ChangeTimer("fast"));
 
             selectedShopItem = null;
+            selectedInfoItem = null;
             lastSelectedIndex = -1;
 
             CanvasClickCommand = new DelegateCommand(args => OnCanvasClick(args as MouseEventArgs));
@@ -141,6 +149,7 @@ namespace WeShallNotPass.ViewModel
             if(ind == Items.Count)
             {
                 Items.Add(CreateItemViewModel(i));
+                if (selectedInfoItem != null) UpdateInfoPanel();
             }
             else
             {
@@ -194,6 +203,7 @@ namespace WeShallNotPass.ViewModel
 
         private void timePassed(object sender, EventArgs e)
         {
+            if (selectedInfoItem != null && selectedInfoItem.Item != null && !selectedInfoItem.Item.IsBuilt) UpdateInfoPanel();
             OnPropertyChanged("Time");
         }
 
@@ -208,22 +218,22 @@ namespace WeShallNotPass.ViewModel
             ShopItems.Add(new ShopItemViewModel("Hullámvasút", // menu name
                 new Uri("/Images/gifs/rollercoaster.gif", UriKind.Relative), // picture location
                 3, 3, 2600, 50, // sizeX, sizeY, cost, build time
-                new Game(-1,-1,"Hullámvasút",3,3, new Uri("/Images/stills/rollercoaster.gif", UriKind.Relative),2600,50,16,50,30, null, 10, 100,400,30), // type, posX, posY, name, sizeX, sizeY, picture location, price, build time, specifics
+                new Game(-1,-1,"Hullámvasút",3,3, new Uri("/Images/stills/rollercoaster.gif", UriKind.Relative),2600,50,16,50,30, _model.GameArea, 10, 100,400,30), // type, posX, posY, name, sizeX, sizeY, picture location, price, build time, specifics
                 new DelegateCommand(t => ManageSelection(t as ShopItemViewModel)))); // select action
             ShopItems.Add(new ShopItemViewModel("Körhinta",
                 new Uri("/Images/gifs/carousel.gif", UriKind.Relative),
                 1, 1, 2200, 25,
-                new Game(-1, -1, "Körhinta", 1, 1, new Uri("/Images/stills/carousel.gif", UriKind.Relative), 2200, 25, 8, 30, 20, null, 4, 40, 220, 18),
+                new Game(-1, -1, "Körhinta", 1, 1, new Uri("/Images/stills/carousel.gif", UriKind.Relative), 2200, 25, 8, 30, 20, _model.GameArea, 4, 40, 220, 18),
                 new DelegateCommand(t => ManageSelection(t as ShopItemViewModel))));
             ShopItems.Add(new ShopItemViewModel("Óriáskerék",
                 new Uri("/Images/gifs/ferris_wheel.gif", UriKind.Relative),
                 2, 2, 3600, 60,
-                new Game(-1, -1, "Körhinta", 2, 2, new Uri("/Images/stills/ferris_wheel.gif", UriKind.Relative), 3600, 60, 24, 60, 40, null, 12, 70, 390, 30),
+                new Game(-1, -1, "Körhinta", 2, 2, new Uri("/Images/stills/ferris_wheel.gif", UriKind.Relative), 3600, 60, 24, 60, 40, _model.GameArea, 12, 70, 390, 30),
                 new DelegateCommand(t => ManageSelection(t as ShopItemViewModel))));
             ShopItems.Add(new ShopItemViewModel("Kamikaze",
                 new Uri("/Images/gifs/roller.gif", UriKind.Relative),
                 2, 2,2600, 35,
-                new Game(-1, -1, "Kamikaize", 2, 2, new Uri("/Images/stills/roller.gif", UriKind.Relative), 2600, 35, 12, 40, 30, null, 6, 38, 250, 25),
+                new Game(-1, -1, "Kamikaize", 2, 2, new Uri("/Images/stills/roller.gif", UriKind.Relative), 2600, 35, 12, 40, 30, _model.GameArea, 6, 38, 250, 25),
                 new DelegateCommand(t => ManageSelection(t as ShopItemViewModel))));
             ShopItems.Add(new ShopItemViewModel("Pálmafa", // menu name
                 new Uri("/Images/palmtree.png", UriKind.Relative), // picture location
@@ -238,12 +248,12 @@ namespace WeShallNotPass.ViewModel
             ShopItems.Add(new ShopItemViewModel("Gyorsétterem",
                 new Uri("/Images/restaurant.png", UriKind.Relative),
                 2, 2, 1900, 40,
-                new Restaurant(-1,-1,"Gyorsétterem",2,2, new Uri("/Images/restaurant.png", UriKind.Relative), 1900,40,20,400,10,null,20,10,50),
+                new Restaurant(-1,-1,"Gyorsétterem",2,2, new Uri("/Images/restaurant.png", UriKind.Relative), 1900,40,20,400,10, _model.GameArea, 20,10,50),
                 new DelegateCommand(t => ManageSelection(t as ShopItemViewModel))));
             ShopItems.Add(new ShopItemViewModel("Kávézó",
                 new Uri("/Images/restaurant2.png", UriKind.Relative),
                 2, 2, 1200, 23,
-                new Restaurant(-1,-1,"Kávézó",2,2, new Uri("/Images/restaurant2.png", UriKind.Relative), 1200,23,14,260,5,null,5,5,20),
+                new Restaurant(-1,-1,"Kávézó",2,2, new Uri("/Images/restaurant2.png", UriKind.Relative), 1200,23,14,260,5, _model.GameArea, 5,5,20),
                 new DelegateCommand(t => ManageSelection(t as ShopItemViewModel))));
         }
 
@@ -295,32 +305,40 @@ namespace WeShallNotPass.ViewModel
                 _model.Build(buildItem);
                 OnPropertyChanged("GameCount");
             } else if (item != null) {
-                InfoItems.Clear();
-                if (item.Visitor == null)
+                selectedInfoItem = item;
+                UpdateInfoPanel();
+            }
+        }
+
+        private void UpdateInfoPanel()
+        {
+            InfoItems.Clear();
+            if (selectedInfoItem == null) return;
+            if (selectedInfoItem.Visitor == null)
+            {
+                Dictionary<string, int> list = selectedInfoItem.Item.GetInfoPanelItems();
+                InfoItems.Add(new InfoItemViewModel(selectedInfoItem.Item.Name, -3, false, selectedInfoItem.Item, -1));
+                if (list == null)
                 {
-                    Dictionary<string, int> list = item.Item.GetInfoPanelItems();
-                    InfoItems.Add(new InfoItemViewModel(item.Item.Name, -3, false, item.Item, -1));
-                    if (list == null)
-                    {
-                        InfoItems.Add(new InfoItemViewModel("Nincs elérhető információ.", -3, false, item.Item,-1));
-                        return;
-                    }
+                    InfoItems.Add(new InfoItemViewModel("Nincs elérhető információ.", -3, false, selectedInfoItem.Item, -1));
+                    return;
+                }
+                for (int i = 0; i < list.Count; i++)
+                {
+                    InfoItems.Add(new InfoItemViewModel(list.ElementAt(i).Key, list.ElementAt(i).Value, false, selectedInfoItem.Item, -1));
+                }
+                list = selectedInfoItem.Item.GetEditableProperty();
+                if (selectedInfoItem.Item.GetEditableProperty() != null)
+                {
                     for (int i = 0; i < list.Count; i++)
                     {
-                        InfoItems.Add(new InfoItemViewModel(list.ElementAt(i).Key, list.ElementAt(i).Value, false, item.Item, -1));
+                        InfoItems.Add(new InfoItemViewModel(list.ElementAt(i).Key, list.ElementAt(i).Value, true, selectedInfoItem.Item, i));
                     }
-                    list = item.Item.GetEditableProperty();
-                    if (item.Item.GetEditableProperty() != null)
-                    {
-                        for (int i = 0; i < list.Count; i++)
-                        {
-                            InfoItems.Add(new InfoItemViewModel(list.ElementAt(i).Key, list.ElementAt(i).Value, true, item.Item, i));
-                        }
-                    }
-                } else
-                {
-                    
                 }
+            }
+            else
+            {
+
             }
         }
 

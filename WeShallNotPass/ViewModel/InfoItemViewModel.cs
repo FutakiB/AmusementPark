@@ -18,11 +18,26 @@ namespace WeShallNotPass.ViewModel
                 bool success = System.Int32.TryParse(instr, out result);
                 if (success && result > 0)
                 {
-                    strvalue = value;
-                    item.SetEditableProperty(convertToList(index, result));
+                    try
+                    {
+                        item.SetEditableProperty(convertToList(index, result));
+                        strvalue = value;
+                    }
+                    catch (ArgumentOutOfRangeException ex)
+                    {
+
+                    }
                 }
                 OnPropertyChanged();
             }
+        }
+        public bool IsBuilt
+        {
+            get
+            {
+                return item.IsBuilt;
+            }
+            set { }
         }
         public bool IsEditable { get; private set; }
         Model.Item item;
@@ -31,13 +46,19 @@ namespace WeShallNotPass.ViewModel
             Text = s;
             IsEditable = ie;
             item = i;
+            item.ImageChanged += Item_ImageChanged;
             index = ind;
             list = item.GetEditableProperty();
             if (n >= 0) strvalue = n.ToString(); else
             {
                 if (n == -3) strvalue = ""; else
-                strvalue = (n == -2) ? "nem" : "igen";
+                strvalue = (n == -2) ? "igen" : "nem";
             }
+        }
+
+        private void Item_ImageChanged(object sender, EventArgs e)
+        {
+            OnPropertyChanged("IsBuilt");
         }
 
         private List<int> convertToList(int ind, int val)

@@ -53,6 +53,21 @@ namespace WeShallNotPass.Model
             set { _visitors = value; }
         }
 
+        private List<Plant> _plants;
+        public List<Plant> Plants
+        {
+            get { return _plants; }
+            set { _plants = value; }
+        }
+        private List<Generator> _generators;
+
+        public List<Generator> Generators
+        {
+            get { return _generators; }
+            set { _generators = value; }
+        }
+
+
         private int _money;
         public int Money
         {
@@ -115,6 +130,7 @@ namespace WeShallNotPass.Model
         public event EventHandler<EventArgs> NewGameStarted;
         public event EventHandler<ErrorMessageEventArgs> ErrorMessageCalled;
         public event EventHandler<EventArgs> ParkOpenedOrClosed;
+        public event EventHandler<ErrorMessageEventArgs> TimerChanged;
 
         #endregion
 
@@ -129,6 +145,56 @@ namespace WeShallNotPass.Model
         {
             Time++;
 
+            if (Time % 10 == 0) // a second has passed
+            {
+                foreach (Visitor v in _visitors) // plants boost visitor's mood
+                {
+                    int maxPlantBoost = 0;
+                    foreach (Plant p in _plants)
+                    {
+                        if (Math.Abs(v.X - p.X) <= p.Radius && Math.Abs(v.Y - p.Y) <= p.Radius && maxPlantBoost < p.MoodBoost)
+                            maxPlantBoost = p.MoodBoost;
+                    }
+                    v.Mood += maxPlantBoost;
+                }
+
+                foreach (Facility f in _restaurants) {
+                    if (!f.IsBuilt) {
+                        f.BuildTime--;
+                        if (f.BuildTime < 0) f.IsBuilt = true;
+                    }
+                    
+                }
+                foreach (Facility f in _games) {
+                    if (!f.IsBuilt)
+                    {
+                        f.BuildTime--;
+                        if (f.BuildTime < 0) f.IsBuilt = true;
+                    }
+                }
+                foreach (Facility f in _restrooms) {
+                    if (!f.IsBuilt)
+                    {
+                        f.BuildTime--;
+                        if (f.BuildTime < 0) f.IsBuilt = true;
+                    }
+                }
+                foreach ( Generator g in _generators)
+                {
+                    if (!g.IsBuilt)
+                    {
+                        g.BuildTime--;
+                        if (g.BuildTime < 0)
+                        {
+                            g.IsBuilt = true;
+                            foreach (Facility f in _restaurants) f.CheckPower(_gameArea);
+                            foreach (Facility f in _games) f.CheckPower(_gameArea);
+                            foreach (Facility f in _restrooms) f.CheckPower(_gameArea);
+                        }
+                    }
+                }
+            }
+
             if (IsOpen && Time % 20 == 0)
             {
                 RegisterVisitor();
@@ -142,6 +208,8 @@ namespace WeShallNotPass.Model
             _restaurants = new List<Restaurant>();
             _restrooms = new List<Restroom>();
             _visitors = new List<Visitor>();
+            _plants = new List<Plant>();
+            _generators = new List<Generator>();
             _money = 15000;
             MoneyUpdated?.Invoke(this, EventArgs.Empty);
             _isCampaigning = false;
@@ -149,7 +217,7 @@ namespace WeShallNotPass.Model
             IsOpen = false;
             TimePassed?.Invoke(this, EventArgs.Empty);
 
-            mainEntrance = new MainEntrance(6, 13, "Bejárat", 2, 1, new Uri("/Images/placeholder.png", UriKind.Relative), 0, 0, 5, 40);
+            mainEntrance = new MainEntrance(6, 13, "Bejárat", 2, 1, new Uri("/Images/entrance.png", UriKind.Relative), 0, 0, 5, 40);
             Build(mainEntrance);
         }
 
@@ -189,12 +257,29 @@ namespace WeShallNotPass.Model
             {
                 case Game game:
                     Games.Add(game);
+                    game.CheckPower(_gameArea);
+                    game.CheckRechaibility(_gameArea);
                     break;
                 case Restaurant restaurant:
                     Restaurants.Add(restaurant);
+                    restaurant.CheckPower(_gameArea);
+                    restaurant.CheckRechaibility(_gameArea);
                     break;
                 case Restroom restroom:
                     Restrooms.Add(restroom);
+                    restroom.CheckPower(_gameArea);
+                    restroom.CheckRechaibility(_gameArea);
+                    break;
+                case Plant p:
+                    Plants.Add(p);
+                    break;
+                case Generator gen:
+                    Generators.Add(gen);
+                    break;
+                case Road r:
+                    foreach (Facility f in _restaurants) f.CheckRechaibility(_gameArea);
+                    foreach (Facility f in _games) f.CheckRechaibility(_gameArea);
+                    foreach (Facility f in _restrooms) f.CheckRechaibility(_gameArea);
                     break;
             }
 
@@ -271,6 +356,11 @@ namespace WeShallNotPass.Model
         {
             Visitors.Remove(v);
             VisitorRemoved(this, new VisitorEventArgs(v));
+        }
+
+        public void ChangeTimer(string sp)
+        {
+            TimerChanged.Invoke(this, new ErrorMessageEventArgs(sp));
         }
         #endregion
     }
