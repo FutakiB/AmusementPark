@@ -69,6 +69,8 @@ namespace WeShallNotPass.ViewModel
         public int Time => _model.Time;
         public int Money => _model.Money;
         public int GameCount => _model.Games.Count;
+        public int VisitorCount => _model.Visitors.Count;
+        public bool IsClosed => !_model.IsOpen;
 
         #endregion
 
@@ -87,14 +89,15 @@ namespace WeShallNotPass.ViewModel
             _model = model;
             _model.TimePassed += new EventHandler<EventArgs>(timePassed);
             _model.MoneyUpdated += new EventHandler<EventArgs>(moneyUpdated);
-            _model.ItemUpdated += new EventHandler<EventArgs>(itemUpdated);
-            _model.VisitorsUpdated += new EventHandler<EventArgs>(visitorsUpdated);
+            _model.ItemUpdated += _model_ItemUpdated;
+            _model.VisitorUpdated += _model_VisitorUpdated;
             _model.ErrorMessageCalled += new EventHandler<ErrorMessageEventArgs>(errorMessageCalled);
+            _model.ParkOpenedOrClosed += _model_ParkOpenedOrClosed;
 
 
             NewGameCommand = new DelegateCommand(p => OnNewGame());
             ExitCommand = new DelegateCommand(p => Exit?.Invoke(this, EventArgs.Empty));
-            OpenParkCommand = new DelegateCommand(p => OpenPark?.Invoke(this, EventArgs.Empty));
+            OpenParkCommand = new DelegateCommand(p => model.OpenPark());
 
             selectedShopItem = null;
             lastSelectedIndex = -1;
@@ -106,8 +109,6 @@ namespace WeShallNotPass.ViewModel
             ShopItems = new ObservableCollection<ShopItemViewModel>();
             InfoItems = new ObservableCollection<InfoItemViewModel>();
 
-            _model.ItemBuilt += _model_ItemBuilt;
-
             InitShopItems();
             ManageSelection(ShopItems[0]);
         }
@@ -116,24 +117,55 @@ namespace WeShallNotPass.ViewModel
 
         #region Methods
 
-        private void _model_ItemBuilt(object sender, ItemEventArgs e)
+        private void _model_ParkOpenedOrClosed(object sender, EventArgs e)
         {
-            Item i = e.Item;
-            Items.Add(new ItemViewModel(i.Name, i.X * 64, i.Y * 64, 0, i.SizeX * 64, i.SizeY * 64, i.Image, i));
+            OnPropertyChanged("IsClosed");
         }
+
         private void errorMessageCalled(object sender, ErrorMessageEventArgs e)
         {
             MessageBox.Show(e.Message, "Vidámpark", MessageBoxButton.OK, MessageBoxImage.Information);
         }
 
-        private void visitorsUpdated(object sender, EventArgs e)
+        private void _model_ItemUpdated(object sender, ItemEventArgs e)
         {
-            throw new NotImplementedException();
+            Item i = e.Item;
+            int ind = 0;
+
+            while (ind < Items.Count && Items[ind].Item != i)
+            {
+                ind++;
+            }
+
+            if(ind == Items.Count)
+            {
+                Items.Add(CreateItemViewModel(i));
+            }
+            else
+            {
+                Items[ind] = CreateItemViewModel(i);
+            }
         }
 
-        private void itemUpdated(object sender, EventArgs e)
+        private void _model_VisitorUpdated(object sender, VisitorEventArgs e)
         {
-            throw new NotImplementedException();
+            Visitor v = e.Visitor;
+            int ind = 0;
+
+            while (ind < Items.Count && Items[ind].Visitor != v)
+            {
+                ind++;
+            }
+
+            if (ind == Items.Count)
+            {
+                Items.Add(CreateItemViewModel(v));
+                OnPropertyChanged("VisitorCount");
+            }
+            else
+            {
+                Items[ind] = CreateItemViewModel(v);
+            }
         }
 
         private void moneyUpdated(object sender, EventArgs e)
@@ -280,6 +312,16 @@ namespace WeShallNotPass.ViewModel
             _model.NewGame();
 
             //NewGame?.Invoke(this, EventArgs.Empty));
+        }
+
+        private ItemViewModel CreateItemViewModel(Visitor v)
+        {
+            return new ItemViewModel("Visitor", v.X + v.DX, v.Y + v.DY, 2, 64, 64, v.Image, v);
+        }
+
+        private ItemViewModel CreateItemViewModel(Item i)
+        {
+            return new ItemViewModel(i.Name, i.X * 64, i.Y * 64, 0, i.SizeX * 64, i.SizeY * 64, i.Image, i);
         }
 
         #endregion

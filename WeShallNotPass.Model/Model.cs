@@ -6,6 +6,8 @@ namespace WeShallNotPass.Model
 {
     public class Model
     {
+        private MainEntrance mainEntrance;
+
         #region Properties
 
         private Item?[,] _gameArea;
@@ -89,18 +91,29 @@ namespace WeShallNotPass.Model
             }
         }
 
+        private bool _isOpen;
+        public bool IsOpen
+        {
+            get { return _isOpen; }
+            set
+            {
+                _isOpen = value;
+                ParkOpenedOrClosed?.Invoke(this, EventArgs.Empty);
+            }
+        }
+
         #endregion
 
         #region Events 
 
-        public event EventHandler<EventArgs> ItemUpdated;
-        public event EventHandler<ItemEventArgs> ItemBuilt;
-        public event EventHandler<EventArgs> VisitorsUpdated;
+        public event EventHandler<ItemEventArgs> ItemUpdated;
+        public event EventHandler<VisitorEventArgs> VisitorUpdated;
         public event EventHandler<EventArgs> CampaignUpdated;
         public event EventHandler<EventArgs> TimePassed;
         public event EventHandler<EventArgs> MoneyUpdated;
         public event EventHandler<EventArgs> NewGameStarted;
         public event EventHandler<ErrorMessageEventArgs> ErrorMessageCalled;
+        public event EventHandler<EventArgs> ParkOpenedOrClosed;
 
         #endregion
 
@@ -108,11 +121,17 @@ namespace WeShallNotPass.Model
 
         public Model()
         {
+            _isOpen = false;
         }
 
         public void Tick()
         {
             Time++;
+
+            if (IsOpen && Time % 20 == 0)
+            {
+                RegisterVisitor();
+            }
         }
 
         public void NewGame()
@@ -121,18 +140,21 @@ namespace WeShallNotPass.Model
             _games = new List<Game>();
             _restaurants = new List<Restaurant>();
             _restrooms = new List<Restroom>();
+            _visitors = new List<Visitor>();
             _money = 15000;
             MoneyUpdated?.Invoke(this, EventArgs.Empty);
             _isCampaigning = false;
             _time = 0;
+            IsOpen = false;
             TimePassed?.Invoke(this, EventArgs.Empty);
 
-            Item gen = new MainEntrance(6, 13, "mainGate", 2, 1, new Uri("/Images/placeholder.png", UriKind.Relative), 0, 0, 5, 400);
-            Build(gen);
+            mainEntrance = new MainEntrance(6, 13, "mainGate", 2, 1, new Uri("/Images/placeholder.png", UriKind.Relative), 0, 0, 5, 40);
+            Build(mainEntrance);
         }
+
         public void OpenPark()
         {
-            throw new NotImplementedException();
+            IsOpen = true;
         }
 
         public void ClosePark()
@@ -175,7 +197,7 @@ namespace WeShallNotPass.Model
                     break;
             }
 
-            ItemBuilt?.Invoke(this, new ItemEventArgs(item));
+            ItemUpdated?.Invoke(this, new ItemEventArgs(item));
             Money -= item.Price;
         }
 
@@ -205,9 +227,43 @@ namespace WeShallNotPass.Model
             return true;
         }
 
-        private void registerVisitor()
+        private void RegisterVisitor()
         {
-            throw new NotImplementedException();
+            Random random = new Random();
+
+            int maxCapacity = 0;
+            foreach (Game g in Games) maxCapacity += g.MaxCapacity;
+            foreach (Restaurant r in Restaurants) maxCapacity += r.MaxCapacity;
+            foreach (Restroom r in Restrooms) maxCapacity += r.MaxCapacity;
+
+            if (maxCapacity == 0) return;
+
+            double fullness = Visitors.Count / (double) maxCapacity;
+
+            if (fullness > 1f) return;
+
+            double d1 = mainEntrance.TicketPrice / 100f;
+            d1 = d1 * (-1) + 1;
+
+            double d2 = fullness * (-1) + 1;
+
+            double willingness = d1 * d2 * 100;
+
+            if (random.Next(100) > willingness) return;
+
+            string img;
+            int imgNumber = random.Next(4);
+
+            if (imgNumber == 0) img = "/Images/characters/red.png";
+            else if (imgNumber == 1) img = "/Images/characters/yellow.png";
+            else if (imgNumber == 2) img = "/Images/characters/green.png";
+            else img = "/Images/characters/cyan.png";
+
+            Visitor v = new Visitor(6 * 64, 13 * 64, 200, 1, 1, 1, new Uri(img, UriKind.Relative));
+            Visitors.Add(v);
+            VisitorUpdated?.Invoke(this, new VisitorEventArgs(v));
+
+            Money += mainEntrance.TicketPrice;
         }
         #endregion
     }

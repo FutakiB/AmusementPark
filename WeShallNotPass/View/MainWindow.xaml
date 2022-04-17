@@ -17,7 +17,7 @@
                 <MenuItem Header="Új" Command="{Binding NewGameCommand}"></MenuItem>
                 <MenuItem Header="Kilépés" Command="{Binding ExitCommand}"></MenuItem>
             </MenuItem>
-            <MenuItem Header="Kinyitás" Command="{Binding OpenParkCommand}"></MenuItem>
+            <MenuItem Header="Kinyitás" Command="{Binding OpenParkCommand}" IsEnabled="{Binding IsClosed}"></MenuItem>
             <MenuItem Header="Építés" IsCheckable="True" IsChecked="{Binding BuildingMode}"></MenuItem>
         </Menu>
         <DockPanel>
@@ -64,7 +64,8 @@
                         <StackPanel Orientation="Horizontal">
                             <TextBlock Text="Money: " FontSize="14" ></TextBlock>
                             <TextBlock Text="{Binding Money}" FontSize="14"></TextBlock>
-                            <TextBlock Text="Visitors: 0" FontSize="14" Margin="12,0,0,0"></TextBlock>
+                            <TextBlock Text="Visitors: " FontSize="14" Margin="12,0,0,0"></TextBlock>
+                            <TextBlock Text="{Binding VisitorCount}" FontSize="14"></TextBlock>
                             <TextBlock Text="Games: " FontSize="14" Margin="12,0,0,0"></TextBlock>
                             <TextBlock Text="{Binding GameCount}" FontSize="14"></TextBlock>
                             <TextBlock Text="Time: " FontSize="14" Margin="12,0,0,0"></TextBlock>

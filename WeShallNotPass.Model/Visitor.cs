@@ -8,58 +8,26 @@ namespace WeShallNotPass.Model
     public class Visitor
     {
         #region Fields
-        private int _x;
-        private int _y;
-        private int _money;
-        private int _satiety;//low = hungry
-        private int _mood;
-        private int _restroomNeeds; // low = need a bathroom
         private double _willingness; //around 0.5 (+0.7 /- 0.3)
-
-        private VisitorsStatus _status;
         private Item _destination;
         #endregion
 
         #region Properties
-        public int X
-        {
-            get { return _x; }
-            set { _x = value; }
-        }
-        public int Y
-        {
-            get { return _y; }
-            set { _y = value; }
-        }
-        public int Money
-        {
-            get { return _money; }
-            set { _money = value; }
-        }
-        public int Satiety
-        {
-            get { return _satiety; }
-            set { _satiety = value; }
-        }
-        public int Mood
-        {
-            get { return _mood; }
-            set { _mood = value; }
-        }
-        public int RestroomNeeds
-        {
-            get { return _restroomNeeds; }
-            set { _restroomNeeds = value; }
-        }
-        public VisitorsStatus Status
-        {
-            get { return _status; }
-            set { _status = value; }
-        }
+        public int X { get; set; }
+        public int Y { get; set; }
+        public int DX { get; private set; }
+        public int DY { get; private set; }
+        public int Money { get; set; }
+        public int Satiety { get; set; }
+        public int Mood { get; set; }
+        public int RestroomNeeds { get; set; }
+        public Uri Image { get; set; }
+
+        public VisitorsStatus Status { get; set; }
         #endregion
 
         #region Methods
-        public Visitor(int x, int y, int money, int hunger, int mood, int restroomNeeds)
+        public Visitor(int x, int y, int money, int hunger, int mood, int restroomNeeds, Uri image)
         {
             X = x;
             Y = y;
@@ -67,9 +35,14 @@ namespace WeShallNotPass.Model
             Satiety = hunger;
             Mood = mood;
             RestroomNeeds = restroomNeeds;
+            Image = image;
+
             Random rnd = new Random();
             _willingness = 0.5 + (double)rnd.Next(-3, 7) / 10;
             //_destination = destination;
+
+            DX = rnd.Next(-20, 20);
+            DY = rnd.Next(-20, 20);
         }
 
         public void Move()
@@ -87,7 +60,7 @@ namespace WeShallNotPass.Model
                 }
                 if (des is Game)
                 {
-                    if ((double)((Game)des).TicketPrice / 1000 < _willingness && _money >= ((Game)des).TicketPrice)
+                    if ((double)((Game)des).TicketPrice / 1000 < _willingness && Money >= ((Game)des).TicketPrice)
                     {
                         return true;
                     }
