@@ -237,6 +237,13 @@ namespace WeShallNotPass.Model
         {
             if (CampaignTime == 0)
             {
+                if (Money < 300)
+                {
+                    ErrorMessageCalled?.Invoke(this, new ErrorMessageEventArgs("Nincs elég pénzed! A kampányolás 300-ba kerül."));
+                    return;
+                }
+
+                Money -= 300;
                 CampaignTime = 60;
             }
         }
@@ -345,6 +352,8 @@ namespace WeShallNotPass.Model
 
             double willingness = d1 * d2 * 100;
 
+            if (CampaignTime > 0) willingness *= 1.5f;
+
             if (random.Next(100) > willingness) return;
 
             string img;
@@ -355,11 +364,21 @@ namespace WeShallNotPass.Model
             else if (imgNumber == 2) img = "/Images/characters/green.png";
             else img = "/Images/characters/cyan.png";
 
-            Visitor v = new Visitor(6 * 64, 13 * 64, 200, 1, 1, 1, new Uri(img, UriKind.Relative));
+            int visitorMoney = 300;
+
+            if (CampaignTime > 0)
+            {
+                // There is a 40% chance, that the visitor has a coupon, and can enter free
+                if (random.Next(100) < 60)
+                {
+                    Money += mainEntrance.TicketPrice;
+                    visitorMoney -= mainEntrance.TicketPrice;
+                }
+            }
+
+            Visitor v = new Visitor(6 * 64, 13 * 64, visitorMoney, 1, 1, 1, new Uri(img, UriKind.Relative));
             Visitors.Add(v);
             VisitorUpdated?.Invoke(this, new VisitorEventArgs(v));
-
-            Money += mainEntrance.TicketPrice;
         }
 
         private void RemoveVisitor(Visitor v)
