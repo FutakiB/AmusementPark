@@ -78,7 +78,7 @@ namespace WeShallNotPass.ViewModel
         public int VisitorCount => _model.Visitors.Count;
         public bool IsClosed => !_model.IsOpen;
         public bool CanCampaign => _model.CampaignTime == 0 && _model.IsOpen;
-        public Visibility CampaignVisibility => CanCampaign ? Visibility.Collapsed : Visibility.Visible;
+        public Visibility CampaignVisibility => _model.CampaignTime == 0 ? Visibility.Collapsed : Visibility.Visible;
 
         #endregion
 
