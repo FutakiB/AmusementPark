@@ -92,13 +92,14 @@ namespace WeShallNotPass.Model
         }
 
         private int _time;
+        private string _gameTime;
 
-        public int Time
+        public string GameTime
         {
-            get { return _time; }
+            get { return _gameTime; }
             set
             {
-                _time = value;
+                _gameTime = value;
                 TimePassed?.Invoke(this, EventArgs.Empty);
             }
         }
@@ -140,9 +141,9 @@ namespace WeShallNotPass.Model
 
         public void Tick()
         {
-            Time++;
+            _time++;
 
-            if (Time % 10 == 0) // a second has passed
+            if (_time % 10 == 0) // a second has passed
             {
                 foreach (Visitor v in _visitors) // plants boost visitor's mood
                 {
@@ -198,9 +199,14 @@ namespace WeShallNotPass.Model
                 }
             }
 
-            if (IsOpen && Time % 20 == 0)
+            if (IsOpen)
             {
-                RegisterVisitor();
+                UpdateGameTime();
+
+                if (_time % 20 == 0)
+                {
+                    RegisterVisitor();
+                }
             }
         }
 
@@ -217,6 +223,7 @@ namespace WeShallNotPass.Model
             MoneyUpdated?.Invoke(this, EventArgs.Empty);
             CampaignTime = 0;
             _time = 0;
+            GameTime = "00:00";
             IsOpen = false;
             TimePassed?.Invoke(this, EventArgs.Empty);
 
@@ -391,6 +398,13 @@ namespace WeShallNotPass.Model
         public void ChangeTimer(string sp)
         {
             TimerChanged.Invoke(this, new ErrorMessageEventArgs(sp));
+        }
+
+        private void UpdateGameTime()
+        {
+            int hour = (_time / 60) % 24;
+            int minute = _time % 60;
+            GameTime = String.Format("{0:D2}:{1:D2}", hour, minute);
         }
         #endregion
     }

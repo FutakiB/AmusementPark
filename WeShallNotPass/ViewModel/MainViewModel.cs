@@ -71,7 +71,7 @@ namespace WeShallNotPass.ViewModel
             }
         }
 
-        public int Time => _model.Time;
+        public string Time => _model.GameTime;
         public int CampaignTime => _model.CampaignTime;
         public int Money => _model.Money;
         public int GameCount => _model.Games.Count;
