@@ -79,19 +79,16 @@ namespace WeShallNotPass.Model
             }
         }
 
-        private bool _isCampaigning;
+        private int _campaignTime;
 
-        public bool IsCampaigning
+        public int CampaignTime
         {
-            get { return _isCampaigning; }
-            set { _isCampaigning = value; }
-        }
-        private int _campaignEnd;
-
-        public int CampaignEnd
-        {
-            get { return _campaignEnd; }
-            set { _campaignEnd = value; }
+            get => _campaignTime;
+            private set
+            {
+                _campaignTime = value;
+                CampaignUpdated?.Invoke(this, EventArgs.Empty);
+            }
         }
 
         private int _time;
@@ -193,6 +190,11 @@ namespace WeShallNotPass.Model
                         }
                     }
                 }
+
+                if (CampaignTime > 0)
+                {
+                    CampaignTime--;
+                }
             }
 
             if (IsOpen && Time % 20 == 0)
@@ -212,7 +214,7 @@ namespace WeShallNotPass.Model
             _generators = new List<Generator>();
             _money = 15000;
             MoneyUpdated?.Invoke(this, EventArgs.Empty);
-            _isCampaigning = false;
+            CampaignTime = 0;
             _time = 0;
             IsOpen = false;
             TimePassed?.Invoke(this, EventArgs.Empty);
@@ -229,6 +231,14 @@ namespace WeShallNotPass.Model
         public void ClosePark()
         {
             throw new NotImplementedException();
+        }
+
+        public void StartCampaigning()
+        {
+            if (CampaignTime == 0)
+            {
+                CampaignTime = 60;
+            }
         }
 
         public void Build(Item item)

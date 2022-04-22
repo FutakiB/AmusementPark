@@ -38,6 +38,7 @@ namespace WeShallNotPass.ViewModel
         public DelegateCommand PauseCommand { get; private set; }
         public DelegateCommand NormalSpeedCommand { get; private set; }
         public DelegateCommand FastSpeedCommand { get; private set; }
+        public DelegateCommand CampaignCommand { get; private set; }
 
         #endregion
 
@@ -71,10 +72,13 @@ namespace WeShallNotPass.ViewModel
         }
 
         public int Time => _model.Time;
+        public int CampaignTime => _model.CampaignTime;
         public int Money => _model.Money;
         public int GameCount => _model.Games.Count;
         public int VisitorCount => _model.Visitors.Count;
         public bool IsClosed => !_model.IsOpen;
+        public bool CanCampaign => _model.CampaignTime == 0 && _model.IsOpen;
+        public Visibility CampaignVisibility => CanCampaign ? Visibility.Collapsed : Visibility.Visible;
 
         #endregion
 
@@ -98,6 +102,7 @@ namespace WeShallNotPass.ViewModel
             _model.VisitorRemoved += _model_VisitorRemoved;
             _model.ErrorMessageCalled += new EventHandler<ErrorMessageEventArgs>(errorMessageCalled);
             _model.ParkOpenedOrClosed += _model_ParkOpenedOrClosed;
+            _model.CampaignUpdated += _model_CampaignUpdated;
 
 
             NewGameCommand = new DelegateCommand(p => OnNewGame());
@@ -106,6 +111,7 @@ namespace WeShallNotPass.ViewModel
             PauseCommand = new DelegateCommand(p => _model.ChangeTimer("stop"));
             NormalSpeedCommand = new DelegateCommand(p => _model.ChangeTimer("normal"));
             FastSpeedCommand = new DelegateCommand(p => _model.ChangeTimer("fast"));
+            CampaignCommand = new DelegateCommand(p => _model.StartCampaigning());
 
             selectedShopItem = null;
             selectedInfoItem = null;
@@ -129,6 +135,7 @@ namespace WeShallNotPass.ViewModel
         private void _model_ParkOpenedOrClosed(object sender, EventArgs e)
         {
             OnPropertyChanged("IsClosed");
+            OnPropertyChanged("CanCampaign");
         }
 
         private void errorMessageCalled(object sender, ErrorMessageEventArgs e)
@@ -205,6 +212,13 @@ namespace WeShallNotPass.ViewModel
         {
             if (selectedInfoItem != null && selectedInfoItem.Item != null && !selectedInfoItem.Item.IsBuilt) UpdateInfoPanel();
             OnPropertyChanged("Time");
+        }
+
+        private void _model_CampaignUpdated(object sender, EventArgs e)
+        {
+            OnPropertyChanged("CampaignTime");
+            OnPropertyChanged("CanCampaign");
+            OnPropertyChanged("CampaignVisibility");
         }
 
         public void InitShopItems()
