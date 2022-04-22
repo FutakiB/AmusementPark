@@ -56,12 +56,12 @@ namespace WeShallNotPass.Model
             return "";
         }
 
-        public virtual Dictionary<string, int> GetInfoPanelItems()
+        public virtual Dictionary<string, Func<string>> GetInfoPanelItems()
         {
             return null;
         }
 
-        public virtual Dictionary<string, int> GetEditableProperty()
+        public virtual Dictionary<string, Func<string>> GetEditableProperty()
         {
             return null;
         }
@@ -83,12 +83,12 @@ namespace WeShallNotPass.Model
             MoodBoost = mood;
         }
 
-        public override Dictionary<string, int> GetInfoPanelItems()
+        public override Dictionary<string, Func<string>> GetInfoPanelItems()
         {
-            Dictionary<string, int> list = new Dictionary<string, int>();
-            if (!IsBuilt) list.Add("Hátralévő építési idő: ", BuildTime);
-            list.Add("Hatáskörnyezet: ", Radius);
-            list.Add("Hangulatnövelés: ", MoodBoost);
+            Dictionary<string, Func<string>> list = new Dictionary<string, Func<string>>();
+            if (!IsBuilt) list.Add("Hátralévő építési idő: ", () => { return BuildTime.ToString(); });
+            list.Add("Hatáskörnyezet: ", () => { return Radius.ToString(); });
+            list.Add("Hangulatnövelés: ", () => { return MoodBoost.ToString(); });
             return list;
         }
 
@@ -115,11 +115,11 @@ namespace WeShallNotPass.Model
             Radius = rad;
         }
 
-        public override Dictionary<string, int> GetInfoPanelItems()
+        public override Dictionary<string, Func<string>> GetInfoPanelItems()
         {
-            Dictionary<string, int> list = new Dictionary<string, int>();
-            if (!IsBuilt) list.Add("Hátralévő építési idő: ", BuildTime);
-            list.Add("Hatáskörnyezet: ", Radius);
+            Dictionary<string, Func<string>> list = new Dictionary<string, Func<string>>();
+            if (!IsBuilt) list.Add("Hátralévő építési idő: ", () => { return BuildTime.ToString(); });
+            list.Add("Hatáskörnyezet: ", () => { return Radius.ToString(); });
             return list;
         }
 
@@ -143,10 +143,10 @@ namespace WeShallNotPass.Model
             return "Belépő ár: " + TicketPrice;
         }
 
-        public override Dictionary<string, int> GetEditableProperty()
+        public override Dictionary<string, Func<string>> GetEditableProperty()
         {
-            Dictionary<string, int> list = new Dictionary<string, int>();
-            list.Add("Jegyár: ", TicketPrice);
+            Dictionary<string, Func<string>> list = new Dictionary<string, Func<string>>();
+            list.Add("Jegyár: ", () => { return TicketPrice.ToString(); });
             return list;
         }
 
@@ -187,7 +187,7 @@ namespace WeShallNotPass.Model
 
                     Generator g = i as Generator;
 
-                    if (Math.Abs(xDiff) < g.Radius && Math.Abs(yDiff) < g.Radius)
+                    if (Math.Abs(xDiff) < g.Radius && Math.Abs(yDiff) < g.Radius && g.IsBuilt)
                     {
                         HasPower = true;
                     }
@@ -253,16 +253,16 @@ namespace WeShallNotPass.Model
 
     public class Restroom : Facility
     {
-        public override Dictionary<string, int> GetInfoPanelItems()
+        public override Dictionary<string, Func<string>> GetInfoPanelItems()
         {
-            Dictionary<string, int> list = new Dictionary<string, int>();
-            if (!IsBuilt) list.Add("Hátralévő építési idő: ", BuildTime);
-            list.Add("Kapacitás: ", MaxCapacity);
-            list.Add("Várakozók: ", VisitorQueue.Count);
-            list.Add("Napi költség: ", RegularFee);
-            list.Add("Használati idő: ", Duration);
-            list.Add("Ellátva árammal: ", HasPower ? -2 : -1);
-            list.Add("Elérhető: ", IsReachable ? -2 : -1);
+            Dictionary<string, Func<string>> list = new Dictionary<string, Func<string>>();
+            if (!IsBuilt) list.Add("Hátralévő építési idő: ", () => { return BuildTime.ToString(); });
+            list.Add("Kapacitás: ", () => { return MaxCapacity.ToString(); });
+            list.Add("Várakozók: ", () => { return VisitorQueue.Count.ToString(); });
+            list.Add("Napi költség: ", () => { return RegularFee.ToString(); });
+            list.Add("Használati idő: ", () => { return Duration.ToString(); });
+            list.Add("Ellátva árammal: ", () => { if (HasPower) return "igen"; else return "nem"; });
+            list.Add("Elérhető: ", () => { if (IsReachable) return "igen"; else return "nem"; });
             return list;
         }
         public override string UniqueShopString()
@@ -298,11 +298,11 @@ namespace WeShallNotPass.Model
                 
             }
         }
-        public override Dictionary<string, int> GetEditableProperty()
+        public override Dictionary<string, Func<string>> GetEditableProperty()
         {
-            Dictionary<string, int> list = new Dictionary<string, int>();
-            list.Add("Jegyár: ", TicketPrice);
-            list.Add("Induláshoz szükséges várakozók száma: ", MinCapacity);
+            Dictionary<string, Func<string>> list = new Dictionary<string, Func<string>>();
+            list.Add("Jegyár: ", () => { return TicketPrice.ToString(); });
+            list.Add("Induláshoz szükséges várakozók száma: ", () => { return MinCapacity.ToString(); });
             return list;
         }
 
@@ -313,18 +313,18 @@ namespace WeShallNotPass.Model
             MinCapacity = l[1];
         }
 
-        public override Dictionary<string, int> GetInfoPanelItems()
+        public override Dictionary<string, Func<string>> GetInfoPanelItems()
         {
-            Dictionary<string, int> list = new Dictionary<string, int>();
-            if (!IsBuilt) list.Add("Hátralévő építési idő: ", BuildTime);
-            list.Add("Kapacitás: ", MaxCapacity);
-            list.Add("Várakozók: ", VisitorQueue.Count);
-            list.Add("Napi költség: ", RegularFee);
-            list.Add("Használati idő: ", Duration);
-            list.Add("Ellátva árammal: ", HasPower ? -2 : -1);
-            list.Add("Elérhető: ", IsReachable ? -2 : -1);
-            list.Add("Alkalmi költség: ", OperationCost);
-            list.Add("Hangulatnövelés: ", MoodBoost);
+            Dictionary<string, Func<string>> list = new Dictionary<string, Func<string>>();
+            if (!IsBuilt) list.Add("Hátralévő építési idő: ", () => { return BuildTime.ToString(); });
+            list.Add("Kapacitás: ", () => { return MaxCapacity.ToString(); });
+            list.Add("Várakozók: ", () => { return VisitorQueue.Count.ToString(); });
+            list.Add("Napi költség: ", () => { return RegularFee.ToString(); });
+            list.Add("Használati idő: ", () => { return Duration.ToString(); });
+            list.Add("Ellátva árammal: ", () => { if (HasPower) return "igen"; else return "nem"; });
+            list.Add("Elérhető: ", () => { if (IsReachable) return "igen"; else return "nem"; });
+            list.Add("Alkalmi költség: ", () => { return OperationCost.ToString(); });
+            list.Add("Hangulatnövelés: ", () => { return MoodBoost.ToString(); });
             return list;
         }
 
@@ -349,24 +349,24 @@ namespace WeShallNotPass.Model
     {
         public int FoodPrice, IngredientCost, HungerBoost;
 
-        public override Dictionary<string, int> GetInfoPanelItems()
+        public override Dictionary<string, Func<string>> GetInfoPanelItems()
         {
-            Dictionary<string, int> list = new Dictionary<string, int>();
-            if (!IsBuilt) list.Add("Hátralévő építési idő: ", BuildTime);
-            list.Add("Kapacitás: ", MaxCapacity);
-            list.Add("Várakozók: ", VisitorQueue.Count);
-            list.Add("Napi költség: ", RegularFee);
-            list.Add("Használati idő: ", Duration);
-            list.Add("Alkalmi költség: ", IngredientCost);
-            list.Add("Éhségoltás: ", HungerBoost);
-            list.Add("Ellátva árammal: ", HasPower ? -2 : -1);
-            list.Add("Elérhető: ", IsReachable ? -2 : -1);
+            Dictionary<string, Func<string>> list = new Dictionary<string, Func<string>>();
+            if (!IsBuilt) list.Add("Hátralévő építési idő: ", () => { return BuildTime.ToString(); });
+            list.Add("Kapacitás: ", () => { return MaxCapacity.ToString(); });
+            list.Add("Várakozók: ", () => { return VisitorQueue.Count.ToString(); });
+            list.Add("Napi költség: ", () => { return RegularFee.ToString(); });
+            list.Add("Használati idő: ", () => { return Duration.ToString(); });
+            list.Add("Alkalmi költség: ", () => { return IngredientCost.ToString(); });
+            list.Add("Éhségoltás: ", () => { return HungerBoost.ToString(); });
+            list.Add("Ellátva árammal: ", () => { if (HasPower) return "igen"; else return "nem"; });
+            list.Add("Elérhető: ", () => { if (IsReachable) return "igen"; else return "nem"; });
             return list;
         }
-        public override Dictionary<string, int> GetEditableProperty()
+        public override Dictionary<string, Func<string>> GetEditableProperty()
         {
-            Dictionary<string, int> list = new Dictionary<string, int>();
-            list.Add("Egy menü ára: ", FoodPrice);
+            Dictionary<string, Func<string>> list = new Dictionary<string, Func<string>>();
+            list.Add("Egy menü ára: ", () => { return FoodPrice.ToString(); });
             return list;
         }
 
