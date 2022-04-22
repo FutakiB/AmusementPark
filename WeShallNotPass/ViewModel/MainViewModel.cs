@@ -145,11 +145,11 @@ namespace WeShallNotPass.ViewModel
             {
                 ind++;
             }
-
+            if (selectedInfoItem != null) UpdateInfoPanel();
             if(ind == Items.Count)
             {
                 Items.Add(CreateItemViewModel(i));
-                if (selectedInfoItem != null) UpdateInfoPanel();
+                
             }
             else
             {
@@ -203,7 +203,10 @@ namespace WeShallNotPass.ViewModel
 
         private void timePassed(object sender, EventArgs e)
         {
-            if (selectedInfoItem != null && selectedInfoItem.Item != null && !selectedInfoItem.Item.IsBuilt) UpdateInfoPanel();
+            if (selectedInfoItem != null) {
+                if (selectedInfoItem.Visitor != null) UpdateInfoPanel(); else
+                if (selectedInfoItem.Item != null && !selectedInfoItem.Item.IsBuilt) UpdateInfoPanel();
+            }
             OnPropertyChanged("Time");
         }
 
@@ -238,7 +241,7 @@ namespace WeShallNotPass.ViewModel
             ShopItems.Add(new ShopItemViewModel("Pálmafa", // menu name
                 new Uri("/Images/palmtree.png", UriKind.Relative), // picture location
                 1, 1, 300, 0, // sizeX, sizeY, cost, build time
-                new Plant(-1,-1,"Pálmafa",1,1, new Uri("/Images/palmtree.png", UriKind.Relative), 300,0,5,20), // type, posX, posY, name, sizeX, sizeY, picture location, price, build time, specifics
+                new Plant(-1,-1,"Pálmafa",1,1, new Uri("/Images/palmtree.png", UriKind.Relative), 300,0,5,2), // type, posX, posY, name, sizeX, sizeY, picture location, price, build time, specifics
                 new DelegateCommand(t => ManageSelection(t as ShopItemViewModel))));
             ShopItems.Add(new ShopItemViewModel("Generátor",
                 new Uri("/Images/generator.png", UriKind.Relative),
@@ -316,11 +319,11 @@ namespace WeShallNotPass.ViewModel
             if (selectedInfoItem == null) return;
             if (selectedInfoItem.Visitor == null)
             {
-                Dictionary<string, int> list = selectedInfoItem.Item.GetInfoPanelItems();
-                InfoItems.Add(new InfoItemViewModel(selectedInfoItem.Item.Name, -3, false, selectedInfoItem.Item, -1));
+                Dictionary<string, Func<string>> list = selectedInfoItem.Item.GetInfoPanelItems();
+                InfoItems.Add(new InfoItemViewModel(selectedInfoItem.Item.Name, () => { return ""; }, false, selectedInfoItem.Item, -2));
                 if (list == null)
                 {
-                    InfoItems.Add(new InfoItemViewModel("Nincs elérhető információ.", -3, false, selectedInfoItem.Item, -1));
+                    InfoItems.Add(new InfoItemViewModel("Nincs elérhető információ.", () => { return ""; }, false, selectedInfoItem.Item, -1));
                     return;
                 }
                 for (int i = 0; i < list.Count; i++)
@@ -338,7 +341,12 @@ namespace WeShallNotPass.ViewModel
             }
             else
             {
-
+                Dictionary<string, Func<string>> list = selectedInfoItem.Visitor.GetInfoPanelItems();
+                InfoItems.Add(new InfoItemViewModel("Vendég", () => { return ""; }, false, null, -2));
+                for (int i = 0; i < list.Count; i++)
+                {
+                    InfoItems.Add(new InfoItemViewModel(list.ElementAt(i).Key, list.ElementAt(i).Value, (i <= 2), null, i));
+                }
             }
         }
 

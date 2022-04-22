@@ -208,6 +208,36 @@ namespace WeShallNotPass.Model
             }
             return null;
         }
+
+        public Dictionary<string, Func<string>> GetInfoPanelItems()
+        {
+            Dictionary<string, Func<string>> list = new Dictionary<string, Func<string>>();
+            list.Add("Jóllakottság: ", () => { return Satiety.ToString(); });
+            list.Add("Kedv: ", () => { return Mood.ToString(); });
+            list.Add("WC: ", () => { return RestroomNeeds.ToString(); });
+            list.Add("Pénz: ", () => { return Money.ToString(); });
+            list.Add("Státusz: ", () => {
+                string val = "";
+                switch (Status)
+                {
+                    case VisitorsStatus.AT_ACTIVITY:
+                        val = "Tevékenykedik";
+                        break;
+                    case VisitorsStatus.WALKING:
+                        val = "Sétál";
+                        break;
+                    case VisitorsStatus.WAITING_IN_QUEUE:
+                        val = "Sorban áll";
+                        break;
+                    case VisitorsStatus.WAITING:
+                        val = "Várakozik";
+                        break;
+                }
+                return val;
+            });
+            list.Add("Cél: ", () => { if (_destination != null) return _destination.Name; else return "nincs"; });
+            return list;
+        }
         #endregion
     }
 }

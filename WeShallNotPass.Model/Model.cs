@@ -152,7 +152,7 @@ namespace WeShallNotPass.Model
                     int maxPlantBoost = 0;
                     foreach (Plant p in _plants)
                     {
-                        if (Math.Abs(v.X - p.X) <= p.Radius && Math.Abs(v.Y - p.Y) <= p.Radius && maxPlantBoost < p.MoodBoost)
+                        if (Math.Abs((v.X / 64) - p.X) <= p.Radius && Math.Abs((v.Y / 64) - p.Y) <= p.Radius && maxPlantBoost < p.MoodBoost)
                             maxPlantBoost = p.MoodBoost;
                     }
                     v.Mood += maxPlantBoost;
@@ -190,6 +190,7 @@ namespace WeShallNotPass.Model
                             foreach (Facility f in _restaurants) f.CheckPower(_gameArea);
                             foreach (Facility f in _games) f.CheckPower(_gameArea);
                             foreach (Facility f in _restrooms) f.CheckPower(_gameArea);
+                            ItemUpdated?.Invoke(this, new ItemEventArgs(g));
                         }
                     }
                 }
