@@ -220,7 +220,7 @@ namespace WeShallNotPass.Model
             IsOpen = false;
             TimePassed?.Invoke(this, EventArgs.Empty);
 
-            mainEntrance = new MainEntrance(6, 13, "Bejárat", 2, 1, new Uri("/Images/entrance.png", UriKind.Relative), 0, 0, 5, 40);
+            mainEntrance = new MainEntrance(6, 13, "Bejárat", 2, 1, new Uri("/Images/ticket_office.png", UriKind.Relative), 0, 0, 5, 40);
             Build(mainEntrance);
         }
 

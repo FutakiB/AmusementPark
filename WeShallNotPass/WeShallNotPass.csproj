@@ -11,15 +11,14 @@
     <None Remove="Images\characters\green.png" />
     <None Remove="Images\characters\red.png" />
     <None Remove="Images\characters\yellow.png" />
-    <None Remove="Images\entrance.png" />
     <None Remove="Images\generator.png" />
     <None Remove="Images\gifs\carousel.gif" />
     <None Remove="Images\gifs\construction.gif" />
     <None Remove="Images\gifs\ferris_wheel.gif" />
     <None Remove="Images\gifs\roller.gif" />
     <None Remove="Images\gifs\rollercoaster.gif" />
+    <None Remove="Images\ground.png" />
     <None Remove="Images\palmtree.png" />
-    <None Remove="Images\path.png" />
     <None Remove="Images\placeholder.png" />
     <None Remove="Images\restaurant.png" />
     <None Remove="Images\restaurant2.png" />
@@ -28,10 +27,10 @@
     <None Remove="Images\stills\ferris_wheel.gif" />
     <None Remove="Images\stills\roller.gif" />
     <None Remove="Images\stills\rollercoaster.gif" />
+    <None Remove="Images\ticket_office.png" />
   </ItemGroup>
 
   <ItemGroup>
-    <Resource Include="Images\entrance.png" />
     <Resource Include="Images\gifs\construction.gif" />
   </ItemGroup>
 
@@ -55,8 +54,8 @@
     <Resource Include="Images\gifs\ferris_wheel.gif" />
     <Resource Include="Images\gifs\roller.gif" />
     <Resource Include="Images\gifs\rollercoaster.gif" />
+    <Resource Include="Images\ground.png" />
     <Resource Include="Images\palmtree.png" />
-    <Resource Include="Images\path.png" />
     <Resource Include="Images\placeholder.png" />
     <Resource Include="Images\restaurant.png" />
     <Resource Include="Images\restaurant2.png" />
@@ -64,6 +63,7 @@
     <Resource Include="Images\stills\ferris_wheel.gif" />
     <Resource Include="Images\stills\roller.gif" />
     <Resource Include="Images\stills\rollercoaster.gif" />
+    <Resource Include="Images\ticket_office.png" />
   </ItemGroup>
 
 </Project>

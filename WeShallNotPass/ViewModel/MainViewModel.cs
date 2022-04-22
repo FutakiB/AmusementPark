@@ -228,9 +228,9 @@ namespace WeShallNotPass.ViewModel
         {
             ShopItems.Clear();
             ShopItems.Add(new ShopItemViewModel("Út",
-               new Uri("/Images/path.png", UriKind.Relative),
+               new Uri("/Images/ground.png", UriKind.Relative),
                1, 1, 100, 0,
-               new Road(-1,-1,"Út",1,1, new Uri("/Images/path.png", UriKind.Relative), 100,0),
+               new Road(-1,-1,"Út",1,1, new Uri("/Images/ground.png", UriKind.Relative), 100,0),
                new DelegateCommand(t => ManageSelection(t as ShopItemViewModel))));
             ShopItems.Add(new ShopItemViewModel("Hullámvasút", // menu name
                 new Uri("/Images/gifs/rollercoaster.gif", UriKind.Relative), // picture location
