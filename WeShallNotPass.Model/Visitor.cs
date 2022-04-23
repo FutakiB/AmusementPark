@@ -8,7 +8,7 @@ namespace WeShallNotPass.Model
     public class Visitor
     {
         #region Fields
-        private double _willingness; //around 0.5 (+0.7 /- 0.3)
+        //private double _willingness; //around 0.5 (+0.7 /- 0.3)
         private Item _destination;
         #endregion
 
@@ -38,8 +38,6 @@ namespace WeShallNotPass.Model
             Image = image;
 
             Random rnd = new Random();
-            _willingness = 0.5 + (double)rnd.Next(-3, 7) / 10;
-            //_destination = destination;
 
             DX = rnd.Next(-20, 20);
             DY = rnd.Next(-20, 20);
@@ -47,7 +45,7 @@ namespace WeShallNotPass.Model
 
         public void Move()
         {
-            throw new NotImplementedException();
+
         }
 
         private bool IsGoodDestination(Facility des)
@@ -58,16 +56,17 @@ namespace WeShallNotPass.Model
                 {
                     return true;
                 }
-                if (des is Game)
+                Random rnd = new Random();
+                if (des is Game && rnd.Next(0, 1000) < ((Game)des).TicketPrice)
                 {
-                    if ((double)((Game)des).TicketPrice / 1000 < _willingness && Money >= ((Game)des).TicketPrice)
+                    if (Money >= ((Game)des).TicketPrice)
                     {
                         return true;
                     }
                 }
-                else if (des is Restaurant)
+                else if (des is Restaurant && rnd.Next(0, 1000) < ((Restaurant)des).FoodPrice)
                 {
-                    if ((double)((Restaurant)des).FoodPrice / 1000 < _willingness && Money >= ((Restaurant)des).FoodPrice)
+                    if (Money >= ((Restaurant)des).FoodPrice)
                     {
                         return true;
                     }
@@ -76,25 +75,27 @@ namespace WeShallNotPass.Model
             return false;
         }
 
-        public void NextActivity(List<Restroom> restrooms, List<Restaurant> restaurants, List<Game> games, MainEntrance mainEntrance)
+        public void NextActivity(List<Restroom> restrooms, List<Restaurant> restaurants, List<Game> games, MainEntrance mainEntrance, Item[,] gameArea, int gameAreaSize)
         {
-            if (Mood > 0)
+            _destination = null;
+            if (Mood < 0)
+            {
+                _destination = mainEntrance;
+            }
+            else
             {
                 Random rnd = new Random();
-                if (RestroomNeeds < 50 || Satiety < 50)
+                if (RestroomNeeds < 50)
                 {
-                    if (RestroomNeeds < Satiety)
-                    {
-                        Restroom ran = restrooms[rnd.Next(restrooms.Count)];
-                        if (IsGoodDestination(ran))
-                            _destination = ran;
-                    }
-                    else
-                    {
-                        Restaurant ran = restaurants[rnd.Next(restaurants.Count)];
-                        if (IsGoodDestination(ran))
-                            _destination = ran;
-                    }
+                    Restaurant ran = restaurants[rnd.Next(restaurants.Count)];
+                    if (IsGoodDestination(ran))
+                        _destination = ran;
+                }
+                else if (Satiety < 50)
+                {
+                    Restroom ran = restrooms[rnd.Next(restrooms.Count)];
+                    if (IsGoodDestination(ran))
+                        _destination = ran;
                 }
                 else
                 {
@@ -102,10 +103,13 @@ namespace WeShallNotPass.Model
                     if (IsGoodDestination(ran))
                         _destination = ran;
                 }
-            }
-            else
-            {
-                _destination = mainEntrance;
+                if (_destination == null)
+                    Status = VisitorsStatus.WAITING;
+                else
+                {
+                    FindPath(gameArea, gameAreaSize);
+                    Status = VisitorsStatus.WALKING;
+                }
             }
         }
 
@@ -216,7 +220,8 @@ namespace WeShallNotPass.Model
             list.Add("Kedv: ", () => { return Mood.ToString(); });
             list.Add("WC: ", () => { return RestroomNeeds.ToString(); });
             list.Add("Pénz: ", () => { return Money.ToString(); });
-            list.Add("Státusz: ", () => {
+            list.Add("Státusz: ", () =>
+            {
                 string val = "";
                 switch (Status)
                 {
