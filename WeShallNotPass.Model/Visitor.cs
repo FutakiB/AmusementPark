@@ -8,7 +8,6 @@ namespace WeShallNotPass.Model
     public class Visitor
     {
         #region Fields
-        //private double _willingness; //around 0.5 (+0.7 /- 0.3)
         private Item _destination;
         private List<Road> _path;
         #endregion
@@ -59,12 +58,34 @@ namespace WeShallNotPass.Model
                     //TODO: mood decreas
                     break;
                 case VisitorsStatus.WALKING:
+                    int stepDistance = 2;
                     if (_path.Count > 0)
                     {
                         Road next = _path[_path.Count - 1];
-                        _path.RemoveAt(_path.Count - 1);
-                        X = next.X * 64;
-                        Y = next.Y * 64;
+                        if (X < next.X * 64)
+                        {
+                            X += stepDistance;
+                        }
+                        if (Y < next.Y * 64)
+                        {
+                            Y += stepDistance;
+                        }
+                        if (X > next.X * 64)
+                        {
+                            X -= stepDistance;
+                        }
+                        if (Y > next.Y * 64)
+                        {
+                            Y -= stepDistance;
+                        }
+                        if (X == next.X * 64 && Y == next.Y * 64)
+                        {
+                            _path.RemoveAt(_path.Count - 1);
+
+                        }
+
+                        //X = next.X * 64;
+                        //Y = next.Y * 64;
                     }
                     break;
                 default:

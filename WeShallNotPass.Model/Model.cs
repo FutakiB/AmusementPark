@@ -203,14 +203,12 @@ namespace WeShallNotPass.Model
                     CampaignTime--;
                 }
             }
-            if (_time % 5 == 0)
+            foreach (Visitor v in _visitors)
             {
-                foreach (Visitor v in _visitors)
-                {
-                    v.Move(Restrooms, Restaurants, Games, mainEntrance, GameArea, GameAreaSize);
-                    VisitorUpdated?.Invoke(this, new VisitorEventArgs(v));
-                }
+                v.Move(Restrooms, Restaurants, Games, mainEntrance, GameArea, GameAreaSize);
+                VisitorUpdated?.Invoke(this, new VisitorEventArgs(v));
             }
+
 
             if (IsOpen)
             {
@@ -243,6 +241,29 @@ namespace WeShallNotPass.Model
             mainEntrance = new MainEntrance(7, 13, "Jegyiroda", 1, 1, new Uri("/Images/ticket_office.png", UriKind.Relative), 0, 0, 5, 40);
             Build(mainEntrance);
             Build(new Road(6, 13, "Út", 1, 1, new Uri("/Images/ground.png", UriKind.Relative), 100, 0));
+            TestMapMaker();
+        }
+
+        private void TestMapMaker()
+        {
+            Build(new Road(6, 12, "Út", 1, 1, new Uri("/Images/ground.png", UriKind.Relative), 100, 0));
+            Build(new Road(6, 11, "Út", 1, 1, new Uri("/Images/ground.png", UriKind.Relative), 100, 0));
+            Build(new Road(6, 10, "Út", 1, 1, new Uri("/Images/ground.png", UriKind.Relative), 100, 0));
+            Build(new Road(6, 9, "Út", 1, 1, new Uri("/Images/ground.png", UriKind.Relative), 100, 0));
+            Build(new Road(6, 8, "Út", 1, 1, new Uri("/Images/ground.png", UriKind.Relative), 100, 0));
+            Build(new Road(6, 7, "Út", 1, 1, new Uri("/Images/ground.png", UriKind.Relative), 100, 0));
+            Build(new Road(5, 7, "Út", 1, 1, new Uri("/Images/ground.png", UriKind.Relative), 100, 0));
+            Build(new Road(4, 7, "Út", 1, 1, new Uri("/Images/ground.png", UriKind.Relative), 100, 0));
+            Build(new Road(3, 7, "Út", 1, 1, new Uri("/Images/ground.png", UriKind.Relative), 100, 0));
+            Build(new Road(2, 7, "Út", 1, 1, new Uri("/Images/ground.png", UriKind.Relative), 100, 0));
+            Build(new Generator(6, 6, "gen", 1, 1, new Uri("/Images/generator.png", UriKind.Relative), 100, 0, 10));
+            Build(new Game(2, 4, "Hullámvasút", 3, 3, new Uri("/Images/stills/rollercoaster.gif", UriKind.Relative), 2600, 0, 16, 50, 30, GameArea, 10, 100, 400, 30));
+            Build(new Road(7, 7, "Út", 1, 1, new Uri("/Images/ground.png", UriKind.Relative), 100, 0));
+            Build(new Road(8, 7, "Út", 1, 1, new Uri("/Images/ground.png", UriKind.Relative), 100, 0));
+            Build(new Road(9, 7, "Út", 1, 1, new Uri("/Images/ground.png", UriKind.Relative), 100, 0));
+            Build(new Road(10, 7, "Út", 1, 1, new Uri("/Images/ground.png", UriKind.Relative), 100, 0));
+            Build(new Road(11, 7, "Út", 1, 1, new Uri("/Images/ground.png", UriKind.Relative), 100, 0));
+            Build(new Restaurant(9, 5, "Gyorsétterem", 2, 2, new Uri("/Images/restaurant.png", UriKind.Relative), 1900, 0, 20, 400, 10, GameArea, 20, 10, 50));
         }
 
         public void OpenPark()
@@ -398,7 +419,8 @@ namespace WeShallNotPass.Model
                 }
             }
 
-            Visitor v = new Visitor(6 * 64, 12 * 64, visitorMoney, 1, 1, 1, new Uri(img, UriKind.Relative));
+
+            Visitor v = new Visitor(6 * 64, 13 * 64, visitorMoney, random.Next(20, 100), 1, 1, new Uri(img, UriKind.Relative));
             Visitors.Add(v);
             VisitorUpdated?.Invoke(this, new VisitorEventArgs(v));
         }
