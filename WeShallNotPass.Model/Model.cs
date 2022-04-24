@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Timers;
 
 namespace WeShallNotPass.Model
 {
@@ -46,7 +45,7 @@ namespace WeShallNotPass.Model
             set { _restrooms = value; }
         }
 
-        private List<Visitor> _visitors;   
+        private List<Visitor> _visitors;
         public List<Visitor> Visitors
         {
             get { return _visitors; }
@@ -156,28 +155,34 @@ namespace WeShallNotPass.Model
                     v.Mood += maxPlantBoost;
                 }
 
-                foreach (Facility f in _restaurants) {
-                    if (!f.IsBuilt) {
+                foreach (Facility f in _restaurants)
+                {
+                    if (!f.IsBuilt)
+                    {
                         f.BuildTime--;
                         if (f.BuildTime < 0) f.IsBuilt = true;
                     }
-                    
+
                 }
-                foreach (Facility f in _games) {
+                foreach (Facility f in _games)
+                {
                     if (!f.IsBuilt)
                     {
                         f.BuildTime--;
                         if (f.BuildTime < 0) f.IsBuilt = true;
                     }
                 }
-                foreach (Facility f in _restrooms) {
+                foreach (Facility f in _restrooms)
+                {
                     if (!f.IsBuilt)
                     {
+                        f.BuildTime = 0;
                         f.BuildTime--;
+
                         if (f.BuildTime < 0) f.IsBuilt = true;
                     }
                 }
-                foreach ( Generator g in _generators)
+                foreach (Generator g in _generators)
                 {
                     if (!g.IsBuilt)
                     {
@@ -196,6 +201,14 @@ namespace WeShallNotPass.Model
                 if (CampaignTime > 0)
                 {
                     CampaignTime--;
+                }
+            }
+            if (_time % 5 == 0)
+            {
+                foreach (Visitor v in _visitors)
+                {
+                    v.Move(Restrooms, Restaurants, Games, mainEntrance, GameArea, GameAreaSize);
+                    VisitorUpdated?.Invoke(this, new VisitorEventArgs(v));
                 }
             }
 
@@ -349,7 +362,7 @@ namespace WeShallNotPass.Model
 
             if (maxCapacity == 0) return;
 
-            double fullness = Visitors.Count / (double) maxCapacity;
+            double fullness = Visitors.Count / (double)maxCapacity;
 
             if (fullness > 1f) return;
 
@@ -384,7 +397,7 @@ namespace WeShallNotPass.Model
                 }
             }
 
-            Visitor v = new Visitor(6 * 64, 13 * 64, visitorMoney, 1, 1, 1, new Uri(img, UriKind.Relative));
+            Visitor v = new Visitor(6 * 64, 12 * 64, visitorMoney, 1, 1, 1, new Uri(img, UriKind.Relative));
             Visitors.Add(v);
             VisitorUpdated?.Invoke(this, new VisitorEventArgs(v));
         }

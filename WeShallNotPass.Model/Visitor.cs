@@ -10,6 +10,7 @@ namespace WeShallNotPass.Model
         #region Fields
         //private double _willingness; //around 0.5 (+0.7 /- 0.3)
         private Item _destination;
+        private List<Road> _path;
         #endregion
 
         #region Properties
@@ -36,6 +37,7 @@ namespace WeShallNotPass.Model
             Mood = mood;
             RestroomNeeds = restroomNeeds;
             Image = image;
+            Status = VisitorsStatus.WAITING;
 
             Random rnd = new Random();
 
@@ -43,9 +45,32 @@ namespace WeShallNotPass.Model
             DY = rnd.Next(-20, 20);
         }
 
-        public void Move()
+        public void Move(List<Restroom> restrooms, List<Restaurant> restaurants, List<Game> games, MainEntrance mainEntrance, Item[,] gameArea, int gameAreaSize)
         {
+            switch (Status)
+            {
+                case VisitorsStatus.WAITING:
+                    NextActivity(restrooms, restaurants, games, mainEntrance, gameArea, gameAreaSize);
+                    break;
+                case VisitorsStatus.AT_ACTIVITY:
+                    //TODO: mood increas
+                    break;
+                case VisitorsStatus.WAITING_IN_QUEUE:
+                    //TODO: mood decreas
+                    break;
+                case VisitorsStatus.WALKING:
+                    if (_path.Count > 0)
+                    {
+                        Road next = _path[_path.Count - 1];
+                        _path.RemoveAt(_path.Count - 1);
+                        X = next.X * 64;
+                        Y = next.Y * 64;
+                    }
+                    break;
+                default:
+                    return;
 
+            }
         }
 
         private bool IsGoodDestination(Facility des)
@@ -85,21 +110,21 @@ namespace WeShallNotPass.Model
             else
             {
                 Random rnd = new Random();
-                if (RestroomNeeds < 50)
+                if (RestroomNeeds < 50 && restrooms.Count > 0)
                 {
-                    Restaurant ran = restaurants[rnd.Next(restaurants.Count)];
+                    Restroom ran = restrooms[rnd.Next(restrooms.Count - 1)];
                     if (IsGoodDestination(ran))
                         _destination = ran;
                 }
-                else if (Satiety < 50)
+                else if (Satiety < 50 && restaurants.Count > 0)
                 {
-                    Restroom ran = restrooms[rnd.Next(restrooms.Count)];
+                    Restaurant ran = restaurants[rnd.Next(restaurants.Count - 1)];
                     if (IsGoodDestination(ran))
                         _destination = ran;
                 }
-                else
+                else if (games.Count > 0)
                 {
-                    Game ran = games[rnd.Next(games.Count)];
+                    Game ran = games[rnd.Next(games.Count - 1)];
                     if (IsGoodDestination(ran))
                         _destination = ran;
                 }
@@ -107,7 +132,7 @@ namespace WeShallNotPass.Model
                     Status = VisitorsStatus.WAITING;
                 else
                 {
-                    FindPath(gameArea, gameAreaSize);
+                    _path = FindPath(gameArea, gameAreaSize);
                     Status = VisitorsStatus.WALKING;
                 }
             }
@@ -118,10 +143,10 @@ namespace WeShallNotPass.Model
             int[,] edgeColor = new int[gameAreaSize, gameAreaSize];
             Road[,] parent = new Road[gameAreaSize, gameAreaSize];
             List<Road> path = new List<Road>();
-            parent[X, Y] = null;
-            edgeColor[X, Y] = 1;
+            parent[X / 64, Y / 64] = null;
+            edgeColor[X / 64, Y / 64] = 1;
             Queue<(int, int)> queue = new Queue<(int, int)>();
-            queue.Enqueue((this.X, this.Y));
+            queue.Enqueue((this.X / 64, this.Y / 64));
             while (queue.Count > 0)
             {
                 (int x, int y) = queue.Dequeue();
@@ -133,7 +158,7 @@ namespace WeShallNotPass.Model
                         while (cur != null)
                         {
                             path.Add(cur);
-                            cur = parent[x, y];
+                            cur = parent[cur.X, cur.Y];
                         }
                         return path;
                     }
@@ -154,7 +179,8 @@ namespace WeShallNotPass.Model
                         while (cur != null)
                         {
                             path.Add(cur);
-                            cur = parent[x, y];
+                            cur = parent[cur.X, cur.Y];
+
                         }
                         return path;
                     }
@@ -175,7 +201,8 @@ namespace WeShallNotPass.Model
                         while (cur != null)
                         {
                             path.Add(cur);
-                            cur = parent[x, y];
+                            cur = parent[cur.X, cur.Y];
+
                         }
                         return path;
                     }
@@ -196,7 +223,8 @@ namespace WeShallNotPass.Model
                         while (cur != null)
                         {
                             path.Add(cur);
-                            cur = parent[x, y];
+                            cur = parent[cur.X, cur.Y];
+
                         }
                         return path;
                     }
