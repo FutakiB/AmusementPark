@@ -202,6 +202,8 @@ namespace WeShallNotPass.Model
                 {
                     CampaignTime--;
                 }
+
+                TimePassed?.Invoke(this, new EventArgs());
             }
 
             foreach (Visitor v in _visitors)
@@ -242,7 +244,7 @@ namespace WeShallNotPass.Model
             mainEntrance = new MainEntrance(7, 13, "Jegyiroda", 1, 1, new Uri("/Images/ticket_office.png", UriKind.Relative), 0, 0, 5, 40);
             Build(mainEntrance);
             Build(new Road(6, 13, "Út", 1, 1, new Uri("/Images/ground.png", UriKind.Relative), 100, 0));
-            TestMapMaker();
+            //TestMapMaker();
         }
 
         private void TestMapMaker()
@@ -270,11 +272,6 @@ namespace WeShallNotPass.Model
         public void OpenPark()
         {
             IsOpen = true;
-        }
-
-        public void ClosePark()
-        {
-            throw new NotImplementedException();
         }
 
         public void StartCampaigning()
@@ -346,11 +343,6 @@ namespace WeShallNotPass.Model
 
             ItemUpdated?.Invoke(this, new ItemEventArgs(item));
             Money -= item.Price;
-        }
-
-        public void Demolish(Item item)
-        {
-            throw new NotImplementedException();
         }
 
         private bool CanBuildAt(int x, int y, int sizeX, int sizeY)

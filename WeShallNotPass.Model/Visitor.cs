@@ -66,20 +66,6 @@ namespace WeShallNotPass.Model
                     break;
                 default:
                     return;
-
-            }
-            ChangeMood(restrooms, restaurants, games, mainEntrance, gameArea, gameAreaSize);
-        }
-
-        private void ChangeMood(List<Restroom> restrooms, List<Restaurant> restaurants, List<Game> games, MainEntrance mainEntrance, Item[,] gameArea, int gameAreaSize)
-        {
-            if (Status == VisitorsStatus.WALKING || Status == VisitorsStatus.WAITING_IN_QUEUE || Status == VisitorsStatus.WAITING)
-            {
-                //Mood--;
-            }
-            if (Mood <= 0 && Status == VisitorsStatus.WALKING)
-            {
-                //NextActivity(restrooms, restaurants, games, mainEntrance, gameArea, gameAreaSize);
             }
         }
 
@@ -157,19 +143,19 @@ namespace WeShallNotPass.Model
                 Random rnd = new Random();
                 if (RestroomNeeds < 50 && restrooms.Count > 0)
                 {
-                    Restroom ran = restrooms[rnd.Next(restrooms.Count - 1)];
+                    Restroom ran = restrooms[rnd.Next(restrooms.Count)];
                     if (IsGoodDestination(ran))
                         _destination = ran;
                 }
                 else if (Satiety < 50 && restaurants.Count > 0)
                 {
-                    Restaurant ran = restaurants[rnd.Next(restaurants.Count - 1)];
+                    Restaurant ran = restaurants[rnd.Next(restaurants.Count)];
                     if (IsGoodDestination(ran))
                         _destination = ran;
                 }
                 else if (games.Count > 0)
                 {
-                    Game ran = games[rnd.Next(games.Count - 1)];
+                    Game ran = games[rnd.Next(games.Count)];
                     if (IsGoodDestination(ran))
                         _destination = ran;
                 }
