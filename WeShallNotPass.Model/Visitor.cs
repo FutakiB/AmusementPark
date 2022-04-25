@@ -12,6 +12,10 @@ namespace WeShallNotPass.Model
         private List<Road> _path;
         #endregion
 
+        #region Events
+        public event EventHandler<VisitorEventArgs> VisitorArrived;
+        #endregion
+
         #region Properties
         public int X { get; set; }
         public int Y { get; set; }
@@ -44,7 +48,7 @@ namespace WeShallNotPass.Model
             DY = rnd.Next(-20, 20);
         }
 
-        public void Move(List<Restroom> restrooms, List<Restaurant> restaurants, List<Game> games, MainEntrance mainEntrance, Item[,] gameArea, int gameAreaSize)
+        public void VisitorTick(List<Restroom> restrooms, List<Restaurant> restaurants, List<Game> games, MainEntrance mainEntrance, Item[,] gameArea, int gameAreaSize)
         {
             switch (Status)
             {
@@ -58,39 +62,59 @@ namespace WeShallNotPass.Model
                     //TODO: mood decreas
                     break;
                 case VisitorsStatus.WALKING:
-                    int stepDistance = 2;
-                    if (_path.Count > 0)
-                    {
-                        Road next = _path[_path.Count - 1];
-                        if (X < next.X * 64)
-                        {
-                            X += stepDistance;
-                        }
-                        if (Y < next.Y * 64)
-                        {
-                            Y += stepDistance;
-                        }
-                        if (X > next.X * 64)
-                        {
-                            X -= stepDistance;
-                        }
-                        if (Y > next.Y * 64)
-                        {
-                            Y -= stepDistance;
-                        }
-                        if (X == next.X * 64 && Y == next.Y * 64)
-                        {
-                            _path.RemoveAt(_path.Count - 1);
-
-                        }
-
-                        //X = next.X * 64;
-                        //Y = next.Y * 64;
-                    }
+                    Move();
                     break;
                 default:
                     return;
 
+            }
+            ChangeMood(restrooms, restaurants, games, mainEntrance, gameArea, gameAreaSize);
+        }
+
+        private void ChangeMood(List<Restroom> restrooms, List<Restaurant> restaurants, List<Game> games, MainEntrance mainEntrance, Item[,] gameArea, int gameAreaSize)
+        {
+            if (Status == VisitorsStatus.WALKING || Status == VisitorsStatus.WAITING_IN_QUEUE || Status == VisitorsStatus.WAITING)
+            {
+                //Mood--;
+            }
+            if (Mood <= 0 && Status == VisitorsStatus.WALKING)
+            {
+                //NextActivity(restrooms, restaurants, games, mainEntrance, gameArea, gameAreaSize);
+            }
+        }
+
+        private void Move()
+        {
+            int stepDistance = 2;
+            if (_path.Count > 0)
+            {
+                Road next = _path[_path.Count - 1];
+                if (X < next.X * 64)
+                {
+                    X += stepDistance;
+                }
+                if (Y < next.Y * 64)
+                {
+                    Y += stepDistance;
+                }
+                if (X > next.X * 64)
+                {
+                    X -= stepDistance;
+                }
+                if (Y > next.Y * 64)
+                {
+                    Y -= stepDistance;
+                }
+                if (X == next.X * 64 && Y == next.Y * 64)
+                {
+                    _path.RemoveAt(_path.Count - 1);
+
+                }
+            }
+            else
+            {
+                Status = VisitorsStatus.WAITING_IN_QUEUE;
+                VisitorArrived?.Invoke(this, new VisitorEventArgs(this));
             }
         }
 
@@ -124,7 +148,7 @@ namespace WeShallNotPass.Model
         public void NextActivity(List<Restroom> restrooms, List<Restaurant> restaurants, List<Game> games, MainEntrance mainEntrance, Item[,] gameArea, int gameAreaSize)
         {
             _destination = null;
-            if (Mood < 0)
+            if (Mood <= 0)
             {
                 _destination = mainEntrance;
             }

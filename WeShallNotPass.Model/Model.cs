@@ -124,7 +124,7 @@ namespace WeShallNotPass.Model
         public event EventHandler<EventArgs> CampaignUpdated;
         public event EventHandler<EventArgs> TimePassed;
         public event EventHandler<EventArgs> MoneyUpdated;
-        public event EventHandler<EventArgs> NewGameStarted;
+        //public event EventHandler<EventArgs> NewGameStarted;
         public event EventHandler<ErrorMessageEventArgs> ErrorMessageCalled;
         public event EventHandler<EventArgs> ParkOpenedOrClosed;
         public event EventHandler<ErrorMessageEventArgs> TimerChanged;
@@ -203,9 +203,10 @@ namespace WeShallNotPass.Model
                     CampaignTime--;
                 }
             }
+
             foreach (Visitor v in _visitors)
             {
-                v.Move(Restrooms, Restaurants, Games, mainEntrance, GameArea, GameAreaSize);
+                v.VisitorTick(Restrooms, Restaurants, Games, mainEntrance, GameArea, GameAreaSize);
                 VisitorUpdated?.Invoke(this, new VisitorEventArgs(v));
             }
 
@@ -420,7 +421,7 @@ namespace WeShallNotPass.Model
             }
 
 
-            Visitor v = new Visitor(6 * 64, 13 * 64, visitorMoney, random.Next(20, 100), 1, 1, new Uri(img, UriKind.Relative));
+            Visitor v = new Visitor(6 * 64, 13 * 64, visitorMoney, random.Next(20, 100), random.Next(20, 100), 1, new Uri(img, UriKind.Relative));
             Visitors.Add(v);
             VisitorUpdated?.Invoke(this, new VisitorEventArgs(v));
         }
