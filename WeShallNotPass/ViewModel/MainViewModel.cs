@@ -2,11 +2,8 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Controls.Ribbon;
 using System.Windows.Input;
 using WeShallNotPass.Model;
 
@@ -29,7 +26,7 @@ namespace WeShallNotPass.ViewModel
         #endregion
 
         #region Commands
-        
+
         public DelegateCommand NewGameCommand { get; private set; }
         public DelegateCommand ExitCommand { get; private set; }
         public DelegateCommand OpenParkCommand { get; private set; }
@@ -44,14 +41,14 @@ namespace WeShallNotPass.ViewModel
 
         #region Properties
 
-        public Item SelectedItem 
-        { 
-            get 
+        public Item SelectedItem
+        {
+            get
             {
                 if (lastSelectedIndex == -1) throw new Exception("No shop item was selected.");
                 ManageSelection(lastSelectedIndex);
                 return selectedShopItem;
-            } 
+            }
             set
             {
                 selectedShopItem = value;
@@ -89,7 +86,7 @@ namespace WeShallNotPass.ViewModel
         public ObservableCollection<InfoItemViewModel> InfoItems { get; private set; }
 
         #endregion
-        
+
         #region Constructor
 
         public MainViewModel(Model.Model model)
@@ -153,10 +150,10 @@ namespace WeShallNotPass.ViewModel
                 ind++;
             }
             if (selectedInfoItem != null) UpdateInfoPanel();
-            if(ind == Items.Count)
+            if (ind == Items.Count)
             {
                 Items.Add(CreateItemViewModel(i));
-                
+
             }
             else
             {
@@ -182,6 +179,7 @@ namespace WeShallNotPass.ViewModel
             else
             {
                 Items[ind] = CreateItemViewModel(v);
+
             }
         }
 
@@ -195,7 +193,7 @@ namespace WeShallNotPass.ViewModel
                 ind++;
             }
 
-            if(ind < Items.Count)
+            if (ind < Items.Count)
             {
                 Items.RemoveAt(ind);
                 OnPropertyChanged("VisitorCount");
@@ -210,8 +208,10 @@ namespace WeShallNotPass.ViewModel
 
         private void timePassed(object sender, EventArgs e)
         {
-            if (selectedInfoItem != null) {
-                if (selectedInfoItem.Visitor != null) UpdateInfoPanel(); else
+            if (selectedInfoItem != null)
+            {
+                if (selectedInfoItem.Visitor != null) UpdateInfoPanel();
+                else
                 if (selectedInfoItem.Item != null && !selectedInfoItem.Item.IsBuilt) UpdateInfoPanel();
             }
             OnPropertyChanged("Time");
@@ -230,12 +230,12 @@ namespace WeShallNotPass.ViewModel
             ShopItems.Add(new ShopItemViewModel("Út",
                new Uri("/Images/ground.png", UriKind.Relative),
                1, 1, 100, 0,
-               new Road(-1,-1,"Út",1,1, new Uri("/Images/ground.png", UriKind.Relative), 100,0),
+               new Road(-1, -1, "Út", 1, 1, new Uri("/Images/ground.png", UriKind.Relative), 100, 0),
                new DelegateCommand(t => ManageSelection(t as ShopItemViewModel))));
             ShopItems.Add(new ShopItemViewModel("Hullámvasút", // menu name
                 new Uri("/Images/gifs/rollercoaster.gif", UriKind.Relative), // picture location
                 3, 3, 2600, 50, // sizeX, sizeY, cost, build time
-                new Game(-1,-1,"Hullámvasút",3,3, new Uri("/Images/stills/rollercoaster.gif", UriKind.Relative),2600,50,16,50,30, _model.GameArea, 10, 100,400,30), // type, posX, posY, name, sizeX, sizeY, picture location, price, build time, specifics
+                new Game(-1, -1, "Hullámvasút", 3, 3, new Uri("/Images/stills/rollercoaster.gif", UriKind.Relative), 2600, 50, 16, 50, 30, _model.GameArea, 10, 100, 400, 30), // type, posX, posY, name, sizeX, sizeY, picture location, price, build time, specifics
                 new DelegateCommand(t => ManageSelection(t as ShopItemViewModel)))); // select action
             ShopItems.Add(new ShopItemViewModel("Körhinta",
                 new Uri("/Images/gifs/carousel.gif", UriKind.Relative),
@@ -249,28 +249,28 @@ namespace WeShallNotPass.ViewModel
                 new DelegateCommand(t => ManageSelection(t as ShopItemViewModel))));
             ShopItems.Add(new ShopItemViewModel("Kamikaze",
                 new Uri("/Images/gifs/roller.gif", UriKind.Relative),
-                2, 2,2600, 35,
+                2, 2, 2600, 35,
                 new Game(-1, -1, "Kamikaize", 2, 2, new Uri("/Images/stills/roller.gif", UriKind.Relative), 2600, 35, 12, 40, 30, _model.GameArea, 6, 38, 250, 25),
                 new DelegateCommand(t => ManageSelection(t as ShopItemViewModel))));
             ShopItems.Add(new ShopItemViewModel("Pálmafa", // menu name
                 new Uri("/Images/palmtree.png", UriKind.Relative), // picture location
                 1, 1, 300, 0, // sizeX, sizeY, cost, build time
-                new Plant(-1,-1,"Pálmafa",1,1, new Uri("/Images/palmtree.png", UriKind.Relative), 300,0,5,2), // type, posX, posY, name, sizeX, sizeY, picture location, price, build time, specifics
+                new Plant(-1, -1, "Pálmafa", 1, 1, new Uri("/Images/palmtree.png", UriKind.Relative), 300, 0, 5, 2), // type, posX, posY, name, sizeX, sizeY, picture location, price, build time, specifics
                 new DelegateCommand(t => ManageSelection(t as ShopItemViewModel))));
             ShopItems.Add(new ShopItemViewModel("Generátor",
                 new Uri("/Images/generator.png", UriKind.Relative),
-                1,1,500,30,
-                new Generator(-1,-1,"Generátor",1,1, new Uri("/Images/generator.png", UriKind.Relative), 500,30,4),
+                1, 1, 500, 30,
+                new Generator(-1, -1, "Generátor", 1, 1, new Uri("/Images/generator.png", UriKind.Relative), 500, 30, 4),
                 new DelegateCommand(t => ManageSelection(t as ShopItemViewModel))));
             ShopItems.Add(new ShopItemViewModel("Gyorsétterem",
                 new Uri("/Images/restaurant.png", UriKind.Relative),
                 2, 2, 1900, 40,
-                new Restaurant(-1,-1,"Gyorsétterem",2,2, new Uri("/Images/restaurant.png", UriKind.Relative), 1900,40,20,400,10, _model.GameArea, 20,10,50),
+                new Restaurant(-1, -1, "Gyorsétterem", 2, 2, new Uri("/Images/restaurant.png", UriKind.Relative), 1900, 40, 20, 400, 10, _model.GameArea, 20, 10, 50),
                 new DelegateCommand(t => ManageSelection(t as ShopItemViewModel))));
             ShopItems.Add(new ShopItemViewModel("Kávézó",
                 new Uri("/Images/restaurant2.png", UriKind.Relative),
                 2, 2, 1200, 23,
-                new Restaurant(-1,-1,"Kávézó",2,2, new Uri("/Images/restaurant2.png", UriKind.Relative), 1200,23,14,260,5, _model.GameArea, 5,5,20),
+                new Restaurant(-1, -1, "Kávézó", 2, 2, new Uri("/Images/restaurant2.png", UriKind.Relative), 1200, 23, 14, 260, 5, _model.GameArea, 5, 5, 20),
                 new DelegateCommand(t => ManageSelection(t as ShopItemViewModel))));
         }
 
@@ -321,7 +321,9 @@ namespace WeShallNotPass.ViewModel
 
                 _model.Build(buildItem);
                 OnPropertyChanged("GameCount");
-            } else if (item != null) {
+            }
+            else if (item != null)
+            {
                 selectedInfoItem = item;
                 UpdateInfoPanel();
             }
@@ -374,7 +376,9 @@ namespace WeShallNotPass.ViewModel
 
         private ItemViewModel CreateItemViewModel(Visitor v)
         {
-            return new ItemViewModel("Visitor", v.X + v.DX, v.Y + v.DY, 2, 64, 64, v.Image, v);
+            ItemViewModel i = new ItemViewModel("Visitor", v.X + v.DX, v.Y + v.DY, 2, 64, 64, v.Image, v);
+            i.Visibility = v.IsVisible ? Visibility.Visible : Visibility.Collapsed;
+            return i;
         }
 
         private ItemViewModel CreateItemViewModel(Item i)

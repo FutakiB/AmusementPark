@@ -1,8 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Windows;
 
 namespace WeShallNotPass.ViewModel
 {
@@ -15,18 +12,26 @@ namespace WeShallNotPass.ViewModel
         public int SizeX { get; set; }
         public int SizeY { get; set; }
         private Uri image;
-        public Uri Image { 
-            get {
+        public Uri Image
+        {
+            get
+            {
                 if (Visitor == null) return Item.Image; else return image;
             }
             set { }
         }
-        public bool IsBuilt { get {
+        public bool IsBuilt
+        {
+            get
+            {
                 if (Visitor == null) return Item.IsBuilt; else return false;
-            } set {
-                
-            } 
+            }
+            set
+            {
+
+            }
         }
+        public Visibility Visibility { get; set; } = Visibility.Visible;
         public Model.Item Item { get; private set; }
         public Model.Visitor Visitor { get; private set; }
 
@@ -42,6 +47,7 @@ namespace WeShallNotPass.ViewModel
             Item.ImageChanged += Item_ImageChanged;
             image = cimage;
             Visitor = null;
+            // Visibility = Visibility.Visible;
         }
 
         public ItemViewModel(string name, int x, int y, int z, int sizeX, int sizeY, Uri cimage, Model.Visitor v)
@@ -55,6 +61,7 @@ namespace WeShallNotPass.ViewModel
             Item = null;
             image = cimage;
             Visitor = v;
+            //Visibility = Visibility.Visible;
         }
         private void Item_ImageChanged(object sender, EventArgs e)
         {

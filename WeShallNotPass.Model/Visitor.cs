@@ -50,6 +50,7 @@ namespace WeShallNotPass.Model
             RestroomNeeds = restroomNeeds;
             Image = image;
             Status = VisitorsStatus.WAITING;
+            IsVisible = true;
 
             Random rnd = new Random();
 
@@ -80,7 +81,7 @@ namespace WeShallNotPass.Model
 
         private void Move()
         {
-            int stepDistance = 2;
+            int stepDistance = 1;
             if (_path.Count > 0)
             {
                 Road next = _path[_path.Count - 1];

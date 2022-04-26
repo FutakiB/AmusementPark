@@ -52,7 +52,8 @@
                                 gif:ImageBehavior.AnimatedSource="{Binding Image}"
                                 Width="{Binding SizeX}"
                                 Height="{Binding SizeY}"
-                                Stretch="Uniform"></Image>
+                                Stretch="Uniform"
+                                Visibility="{Binding Visibility}"/>
                         </DataTemplate>
                     </ItemsControl.ItemTemplate>
 

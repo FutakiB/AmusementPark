@@ -170,7 +170,9 @@ namespace WeShallNotPass.Model
                             f.EndTimer = f.Duration;
 
                             vis[0].Status = VisitorsStatus.AT_ACTIVITY;
+                            vis[0].IsVisible = false;
                             vis[0].Money -= (f as Restaurant).FoodPrice;
+
 
                             Money += (f as Restaurant).FoodPrice;
                         }
@@ -180,7 +182,9 @@ namespace WeShallNotPass.Model
                         f.EndTimer--;
                         if (f.EndTimer <= 0)
                         {
-                            f.VisitorQueue.Dequeue().Status = VisitorsStatus.WAITING;
+                            Visitor v = f.VisitorQueue.Dequeue();
+                            v.Status = VisitorsStatus.WAITING;
+                            v.IsVisible = true;
                         }
                     }
                 }
@@ -209,6 +213,7 @@ namespace WeShallNotPass.Model
                             for (int i = 0; i < (f as Game).ActLoad; i++)
                             {
                                 vis[i].Status = VisitorsStatus.AT_ACTIVITY;
+                                vis[i].IsVisible = false;
                                 vis[i].Money -= (f as Game).TicketPrice;
                             }
                             Money += (f as Game).TicketPrice * (f as Game).ActLoad;
@@ -224,6 +229,7 @@ namespace WeShallNotPass.Model
                             {
                                 Visitor v = f.VisitorQueue.Dequeue();
                                 v.Status = VisitorsStatus.WAITING;
+                                v.IsVisible = true;
                             }
                             (f as Game).IsOperating = false;
                         }
@@ -487,7 +493,7 @@ namespace WeShallNotPass.Model
             }
 
 
-                Visitor v = new Visitor(6 * 64, 13 * 64, visitorMoney, random.Next(20, 100), random.Next(20, 100), 1, new Uri(img, UriKind.Relative));
+            Visitor v = new Visitor(6 * 64, 13 * 64, visitorMoney, random.Next(20, 100), random.Next(20, 100), 1, new Uri(img, UriKind.Relative));
             Visitors.Add(v);
             VisitorUpdated?.Invoke(this, new VisitorEventArgs(v));
             v.VisitorArrived += VisitorArrived;
@@ -503,7 +509,6 @@ namespace WeShallNotPass.Model
             else
             {
                 ((Facility)visitor.Destination).VisitorQueue.Enqueue(visitor);
-                visitor.IsVisible = false;
             }
         }
 
