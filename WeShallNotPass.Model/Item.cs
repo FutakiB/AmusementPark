@@ -1,8 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace WeShallNotPass.Model
 {
@@ -41,18 +38,22 @@ namespace WeShallNotPass.Model
         }
         public int Price;
         private bool isBuilt;
-        public bool IsBuilt { get { return isBuilt; } set
+        public bool IsBuilt
+        {
+            get { return isBuilt; }
+            set
             {
                 isBuilt = value;
                 if (isBuilt == false) Image = new Uri("/Images/gifs/construction.gif", UriKind.Relative);
-                    else Image = new Uri(originalUri, UriKind.Relative);
+                else Image = new Uri(originalUri, UriKind.Relative);
             }
         }
         public int BuildTime { get; set; }
 
         public event EventHandler<EventArgs> ImageChanged;
 
-        public virtual string UniqueShopString() {
+        public virtual string UniqueShopString()
+        {
             return "";
         }
 
@@ -92,7 +93,8 @@ namespace WeShallNotPass.Model
             return list;
         }
 
-        public override string UniqueShopString() {
+        public override string UniqueShopString()
+        {
             return "Hangulatnövelés: " + MoodBoost + "\nHatáskörnyezet: " + Radius;
         }
     }
@@ -102,7 +104,7 @@ namespace WeShallNotPass.Model
         public Road(int x, int y, String name, int sx, int sy, Uri imageLocation, int price, int buildTime)
             : base(x, y, name, sx, sy, imageLocation, price, buildTime)
         {
-            
+
         }
     }
 
@@ -128,7 +130,7 @@ namespace WeShallNotPass.Model
             return "Hatáskörnyezet: " + Radius;
         }
     }
-    
+
     public class MainEntrance : Generator
     {
         public int TicketPrice;
@@ -159,7 +161,7 @@ namespace WeShallNotPass.Model
     public class Facility : Item
     {
         public Queue<Visitor> VisitorQueue;
-        public int MaxCapacity, RegularFee, Duration;
+        public int MaxCapacity, RegularFee, Duration, EndTimer;
         public bool HasPower, IsReachable;
 
         public override string UniqueShopString()
@@ -175,6 +177,7 @@ namespace WeShallNotPass.Model
             Duration = duration;
             HasPower = false;
             IsReachable = false;
+            EndTimer = 0;
         }
         public void CheckPower(Item[,] ga)
         {
@@ -223,7 +226,7 @@ namespace WeShallNotPass.Model
                     IsReachable = true;
                     return;
                 }
-                for (int i=cur.X;i<cur.X+cur.SizeX;i++) for (int j=cur.Y;j<cur.Y+cur.SizeY;j++) Found[i, j] = true; //found
+                for (int i = cur.X; i < cur.X + cur.SizeX; i++) for (int j = cur.Y; j < cur.Y + cur.SizeY; j++) Found[i, j] = true; //found
                 if (cur.GetType() != typeof(Road) && cur.GetType() != typeof(MainEntrance)) continue;
 
                 int nextX = cur.X - 1, nextY = cur.Y;
@@ -275,7 +278,7 @@ namespace WeShallNotPass.Model
 
     public class Game : Facility
     {
-        public int MinCapacity, TicketPrice, OperationCost, MoodBoost;
+        public int TicketPrice, OperationCost, MoodBoost, MinCapacity, ActLoad;
         private bool isOperating;
         public bool IsOperating
         {
@@ -289,13 +292,14 @@ namespace WeShallNotPass.Model
                     {
                         String str = Image.ToString().Substring(13);
                         Image = new Uri("/Images/stills/" + str, UriKind.Relative);
-                    } else
+                    }
+                    else
                     {
                         String str = Image.ToString().Substring(15);
                         Image = new Uri("/Images/gifs/" + str, UriKind.Relative);
-                    } 
+                    }
                 }
-                
+
             }
         }
         public override Dictionary<string, Func<string>> GetEditableProperty()
@@ -318,6 +322,7 @@ namespace WeShallNotPass.Model
             Dictionary<string, Func<string>> list = new Dictionary<string, Func<string>>();
             if (!IsBuilt) list.Add("Hátralévő építési idő: ", () => { return BuildTime.ToString(); });
             list.Add("Kapacitás: ", () => { return MaxCapacity.ToString(); });
+            //list.Add("Használók száma: ", () => { return ActLoad.ToString(); });
             list.Add("Várakozók: ", () => { return VisitorQueue.Count.ToString(); });
             list.Add("Napi költség: ", () => { return RegularFee.ToString(); });
             list.Add("Használati idő: ", () => { return Duration.ToString(); });
@@ -342,6 +347,7 @@ namespace WeShallNotPass.Model
             OperationCost = cost;
             MoodBoost = mood;
             IsOperating = true;
+            ActLoad = 0;
         }
     }
 

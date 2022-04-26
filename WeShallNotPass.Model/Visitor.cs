@@ -8,8 +8,8 @@ namespace WeShallNotPass.Model
     public class Visitor
     {
         #region Fields
-        private Item _destination;
         private List<Road> _path;
+        private Item _destination;
         #endregion
 
         #region Events
@@ -26,6 +26,15 @@ namespace WeShallNotPass.Model
         public int Mood { get; set; }
         public int RestroomNeeds { get; set; }
         public Uri Image { get; set; }
+        public bool IsVisible { get; set; }
+        public int AtActivitiTime { get; set; }
+
+        public Item Destination
+        {
+            get { return _destination; }
+            private set { _destination = value; }
+        }
+
 
         public VisitorsStatus Status { get; set; }
         #endregion
