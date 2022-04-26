@@ -162,7 +162,27 @@ namespace WeShallNotPass.Model
                         f.BuildTime--;
                         if (f.BuildTime < 0) f.IsBuilt = true;
                     }
+                    if (f.EndTimer <= 0)
+                    {
+                        if (f.VisitorQueue.Count >= 1)
+                        {
+                            Visitor[] vis = f.VisitorQueue.ToArray();
+                            f.EndTimer = f.Duration;
 
+                            vis[0].Status = VisitorsStatus.AT_ACTIVITY;
+                            vis[0].Money -= (f as Restaurant).FoodPrice;
+
+                            Money += (f as Restaurant).FoodPrice;
+                        }
+                    }
+                    else
+                    {
+                        f.EndTimer--;
+                        if (f.EndTimer <= 0)
+                        {
+                            f.VisitorQueue.Dequeue().Status = VisitorsStatus.WAITING;
+                        }
+                    }
                 }
                 foreach (Facility f in _games)
                 {
@@ -170,6 +190,43 @@ namespace WeShallNotPass.Model
                     {
                         f.BuildTime--;
                         if (f.BuildTime < 0) f.IsBuilt = true;
+                    }
+
+                    if (f.EndTimer <= 0)
+                    {
+                        if (f.VisitorQueue.Count >= (f as Game).MinCapacity)
+                        {
+                            if (f.VisitorQueue.Count >= f.MaxCapacity)
+                            {
+                                (f as Game).ActLoad = f.MaxCapacity;
+                            }
+                            else
+                            {
+                                (f as Game).ActLoad = f.VisitorQueue.Count;
+                            }
+                            Visitor[] vis = f.VisitorQueue.ToArray();
+                            f.EndTimer = f.Duration;
+                            for (int i = 0; i < (f as Game).ActLoad; i++)
+                            {
+                                vis[i].Status = VisitorsStatus.AT_ACTIVITY;
+                                vis[i].Money -= (f as Game).TicketPrice;
+                            }
+                            Money += (f as Game).TicketPrice * (f as Game).ActLoad;
+                            (f as Game).IsOperating = true;
+                        }
+                    }
+                    else
+                    {
+                        f.EndTimer--;
+                        if (f.EndTimer <= 0)
+                        {
+                            for (int i = 0; i < (f as Game).ActLoad; i++)
+                            {
+                                Visitor v = f.VisitorQueue.Dequeue();
+                                v.Status = VisitorsStatus.WAITING;
+                            }
+                            (f as Game).IsOperating = false;
+                        }
                     }
                 }
                 foreach (Facility f in _restrooms)
@@ -180,6 +237,24 @@ namespace WeShallNotPass.Model
                         f.BuildTime--;
 
                         if (f.BuildTime < 0) f.IsBuilt = true;
+                    }
+                    if (f.EndTimer <= 0)
+                    {
+                        if (f.VisitorQueue.Count >= 1)
+                        {
+                            Visitor[] vis = f.VisitorQueue.ToArray();
+                            f.EndTimer = f.Duration;
+
+                            vis[0].Status = VisitorsStatus.AT_ACTIVITY;
+                        }
+                    }
+                    else
+                    {
+                        f.EndTimer--;
+                        if (f.EndTimer <= 0)
+                        {
+                            f.VisitorQueue.Dequeue().Status = VisitorsStatus.WAITING;
+                        }
                     }
                 }
                 foreach (Generator g in _generators)
@@ -260,7 +335,7 @@ namespace WeShallNotPass.Model
             Build(new Road(3, 7, "Út", 1, 1, new Uri("/Images/ground.png", UriKind.Relative), 100, 0));
             Build(new Road(2, 7, "Út", 1, 1, new Uri("/Images/ground.png", UriKind.Relative), 100, 0));
             Build(new Generator(6, 6, "gen", 1, 1, new Uri("/Images/generator.png", UriKind.Relative), 100, 0, 10));
-            Build(new Game(2, 4, "Hullámvasút", 3, 3, new Uri("/Images/stills/rollercoaster.gif", UriKind.Relative), 2600, 0, 16, 50, 30, GameArea, 10, 100, 400, 30));
+            Build(new Game(2, 4, "Hullámvasút", 3, 3, new Uri("/Images/stills/rollercoaster.gif", UriKind.Relative), 2600, 0, 16, 50, 30, GameArea, 2, 100, 400, 30));
             Build(new Road(7, 7, "Út", 1, 1, new Uri("/Images/ground.png", UriKind.Relative), 100, 0));
             Build(new Road(8, 7, "Út", 1, 1, new Uri("/Images/ground.png", UriKind.Relative), 100, 0));
             Build(new Road(9, 7, "Út", 1, 1, new Uri("/Images/ground.png", UriKind.Relative), 100, 0));
@@ -415,6 +490,21 @@ namespace WeShallNotPass.Model
                 Visitor v = new Visitor(6 * 64, 13 * 64, visitorMoney, random.Next(20, 100), random.Next(20, 100), 1, new Uri(img, UriKind.Relative));
             Visitors.Add(v);
             VisitorUpdated?.Invoke(this, new VisitorEventArgs(v));
+            v.VisitorArrived += VisitorArrived;
+        }
+
+        private void VisitorArrived(object sender, VisitorEventArgs e)
+        {
+            Visitor visitor = (Visitor)sender;
+            if (visitor.Destination is MainEntrance)
+            {
+                RemoveVisitor(visitor);
+            }
+            else
+            {
+                ((Facility)visitor.Destination).VisitorQueue.Enqueue(visitor);
+                visitor.IsVisible = false;
+            }
         }
 
         private void RemoveVisitor(Visitor v)
