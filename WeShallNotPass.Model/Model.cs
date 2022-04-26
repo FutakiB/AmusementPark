@@ -170,7 +170,7 @@ namespace WeShallNotPass.Model
                             f.EndTimer = f.Duration;
 
                             vis[0].Status = VisitorsStatus.AT_ACTIVITY;
-                            vis[0].IsVisible = false;
+
                             vis[0].Money -= (f as Restaurant).FoodPrice;
 
 
@@ -184,7 +184,7 @@ namespace WeShallNotPass.Model
                         {
                             Visitor v = f.VisitorQueue.Dequeue();
                             v.Status = VisitorsStatus.WAITING;
-                            v.IsVisible = true;
+
                         }
                     }
                 }
@@ -213,7 +213,7 @@ namespace WeShallNotPass.Model
                             for (int i = 0; i < (f as Game).ActLoad; i++)
                             {
                                 vis[i].Status = VisitorsStatus.AT_ACTIVITY;
-                                vis[i].IsVisible = false;
+
                                 vis[i].Money -= (f as Game).TicketPrice;
                             }
                             Money += (f as Game).TicketPrice * (f as Game).ActLoad;
@@ -229,7 +229,6 @@ namespace WeShallNotPass.Model
                             {
                                 Visitor v = f.VisitorQueue.Dequeue();
                                 v.Status = VisitorsStatus.WAITING;
-                                v.IsVisible = true;
                             }
                             (f as Game).IsOperating = false;
                         }
@@ -509,6 +508,7 @@ namespace WeShallNotPass.Model
             else
             {
                 ((Facility)visitor.Destination).VisitorQueue.Enqueue(visitor);
+                ItemUpdated?.Invoke(this, new ItemEventArgs(visitor.Destination));
             }
         }
 

@@ -26,7 +26,6 @@ namespace WeShallNotPass.Model
         public int Mood { get; set; }
         public int RestroomNeeds { get; set; }
         public Uri Image { get; set; }
-        public bool IsVisible { get; set; }
         public int AtActivitiTime { get; set; }
 
         public Item Destination
@@ -50,7 +49,6 @@ namespace WeShallNotPass.Model
             RestroomNeeds = restroomNeeds;
             Image = image;
             Status = VisitorsStatus.WAITING;
-            IsVisible = true;
 
             Random rnd = new Random();
 

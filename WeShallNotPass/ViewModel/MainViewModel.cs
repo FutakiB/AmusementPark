@@ -377,7 +377,7 @@ namespace WeShallNotPass.ViewModel
         private ItemViewModel CreateItemViewModel(Visitor v)
         {
             ItemViewModel i = new ItemViewModel("Visitor", v.X + v.DX, v.Y + v.DY, 2, 64, 64, v.Image, v);
-            i.Visibility = v.IsVisible ? Visibility.Visible : Visibility.Collapsed;
+            i.Visibility = v.Status == VisitorsStatus.AT_ACTIVITY ? Visibility.Collapsed : Visibility.Visible;
             return i;
         }
 
