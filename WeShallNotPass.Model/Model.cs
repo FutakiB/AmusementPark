@@ -402,18 +402,17 @@ namespace WeShallNotPass.Model
 
             int visitorMoney = 300;
 
-            if (CampaignTime > 0)
+            // There is a 40% chance, that the visitor has a coupon while campaigning
+            bool hasCoupon = CampaignTime > 0 && random.Next(100) < 60;
+
+            if (!hasCoupon)
             {
-                // There is a 40% chance, that the visitor has a coupon, and can enter free
-                if (random.Next(100) < 60)
-                {
-                    Money += mainEntrance.TicketPrice;
-                    visitorMoney -= mainEntrance.TicketPrice;
-                }
+                Money += mainEntrance.TicketPrice;
+                visitorMoney -= mainEntrance.TicketPrice;
             }
 
 
-            Visitor v = new Visitor(6 * 64, 13 * 64, visitorMoney, random.Next(20, 100), random.Next(20, 100), 1, new Uri(img, UriKind.Relative));
+                Visitor v = new Visitor(6 * 64, 13 * 64, visitorMoney, random.Next(20, 100), random.Next(20, 100), 1, new Uri(img, UriKind.Relative));
             Visitors.Add(v);
             VisitorUpdated?.Invoke(this, new VisitorEventArgs(v));
         }
