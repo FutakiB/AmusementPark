@@ -243,7 +243,7 @@ namespace WeShallNotPass.Model
 
             mainEntrance = new MainEntrance(7, 13, "Jegyiroda", 1, 1, new Uri("/Images/ticket_office.png", UriKind.Relative), 0, 0, 5, 40);
             Build(mainEntrance);
-            Build(new Road(6, 13, "Út", 1, 1, new Uri("/Images/ground.png", UriKind.Relative), 100, 0));
+            Build(new Road(6, 13, "Út", 1, 1, new Uri("/Images/ground.png", UriKind.Relative), 0, 0));
             //TestMapMaker();
         }
 
